@@ -52,6 +52,12 @@ h1 {
   list-style: none; margin: clamp(36px,6vw,56px) 0 0; padding: 0;
   display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px;
 }
+/* Grid stretches each <li> to match its row's tallest card, but the <a>
+   card inside doesn't inherit that height on its own — without this, a
+   card with a one-line tagline visually ends short while its taller
+   row-mate keeps going, so the row's bottom edges never line up. */
+.grid li { display: flex; }
+.card { flex: 1; }
 @media (max-width: 620px) { .grid { grid-template-columns: 1fr; } }
 
 .card {
