@@ -1,0 +1,1338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FaunaFolio — the wildlife journal for every animal you meet</title>
+<script>
+/* Apply the visitor's saved theme before first paint (no flash). */
+(function () {
+  try {
+    var r = document.documentElement;
+    var s = localStorage.getItem("ff-scheme"), p = localStorage.getItem("ff-palette"), c = localStorage.getItem("ff-comic");
+    if (s) r.setAttribute("data-scheme", s);
+    if (p) r.setAttribute("data-palette", p);
+    if (c) r.setAttribute("data-comic", c);
+  } catch (e) {}
+})();
+</script>
+<meta name="description" content="Snap any animal and FaunaFolio names the species on your phone, pins where you met it, and files it in a private wildlife and pet journal. No ads, no account, no tracking.">
+<meta name="theme-color" content="#0D1B13">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<!-- Social previews. Most link unfurlers want absolute URLs: once the site has
+     a domain, change these two to e.g. https://faunafolio.app/assets/img/og-card.jpg -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="FaunaFolio">
+<meta property="og:description" content="The wildlife journal for every animal you meet. On-device species recognition, a map of every sighting, trip scrapbooks and pet pages.">
+<meta property="og:image" content="assets/img/og-card.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="assets/img/og-card.jpg">
+<!-- Once the App Store listing is live, uncomment and add the numeric app id
+     to get Safari's "Open in App Store" banner on iPhone:
+<meta name="apple-itunes-app" content="app-id=0000000000"> -->
+<link rel="preload" href="assets/fonts/Bangers-Regular.ttf" as="font" type="font/ttf" crossorigin>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"FaunaFolio","operatingSystem":"iOS, iPadOS","applicationCategory":"LifestyleApplication","description":"A private wildlife and pet journal: on-device species recognition, a map of every sighting, trip scrapbooks and pet profiles.","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
+</script>
+<style>
+@font-face {
+  font-family: "Bangers";
+  src: url("assets/fonts/Bangers-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+/* =================================================================
+   Theme tokens. The page uses the app's own theme engine:
+   - palette:  data-palette on <html> (11 palettes, Forest by default)
+   - scheme:   data-scheme  = light | dark | amoled (visitor's pick),
+               else the host's data-theme stamp, else the OS setting
+   - comic:    data-comic="on" (ink borders, hard shadows, halftone)
+   Dark-first: bare :root holds the dark scheme.
+   ================================================================= */
+:root {
+  /* Palette: Forest (the app's default) */
+  --p-main: #6FA97E;
+  --p-mid: #4C7A5A;
+  --p-deep: #1E3D2B;
+
+  /* Constants that never change with the palette, same as in the app:
+     "legendary is gold" stays true across every skin. */
+  --gold: #D9A441;
+  --gold-hi: #E8B95A;
+  --gold-ink: #1C1405;
+  --paper: #EFE6CC;
+  --paper-ink: #1B2A20;
+  --r-common: #8FA694;
+  --r-uncommon: #6FA97E;
+  --r-rare: #5B8FA8;
+  --r-epic: #9B7EC4;
+  --r-legendary: #D9A441;
+
+  /* Dark scheme */
+  color-scheme: dark;
+  --bg: color-mix(in srgb, var(--p-deep) 38%, #030604);
+  --bg-2: color-mix(in srgb, var(--p-deep) 55%, #030604);
+  --surface: color-mix(in srgb, var(--p-deep) 62%, #040705);
+  --surface-2: var(--p-deep);
+  --line: color-mix(in srgb, var(--p-main) 17%, transparent);
+  --line-2: color-mix(in srgb, var(--p-main) 30%, transparent);
+  --text: #F2EBD3;
+  --text-2: color-mix(in srgb, var(--p-main) 28%, #DDD9CC);
+  --text-3: color-mix(in srgb, var(--p-main) 40%, #9EA39B);
+  --accent: color-mix(in srgb, var(--p-main) 85%, #FFFFFF);
+  --accent-soft: color-mix(in srgb, var(--p-main) 22%, transparent);
+  --gold-text: #D9A441;
+  --header-bg: color-mix(in srgb, var(--bg) 80%, transparent);
+  --glow: color-mix(in srgb, var(--p-main) 24%, transparent);
+  --ring: color-mix(in srgb, var(--p-main) 17%, transparent);
+  --leaf-opacity: 1;
+  --paper-edge: transparent;
+  --ink-line: #000000;
+  --shadow: 0 50px 90px -40px rgba(0, 0, 0, 0.9);
+  --bezel-edge: rgba(242, 235, 211, 0.14);
+
+  --display: "Bangers", "Impact", "Haettenschweiler", "Arial Narrow Bold", sans-serif;
+  --body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+  --wrap: 1180px;
+  --gutter: clamp(16px, 4vw, 24px);
+  --radius: 18px;
+}
+
+/* The app's other ten palettes (main / mid / deep, from app_palettes.dart) */
+:root[data-palette="river"]    { --p-main: #64A0BE; --p-mid: #39708C; --p-deep: #16384A; }
+:root[data-palette="dusk"]     { --p-main: #9B86C8; --p-mid: #63519A; --p-deep: #32284E; }
+:root[data-palette="ember"]    { --p-main: #D08B5B; --p-mid: #9C5A2E; --p-deep: #4A2A18; }
+:root[data-palette="meadow"]   { --p-main: #A9C24A; --p-mid: #6E8A2E; --p-deep: #33421A; }
+:root[data-palette="coral"]    { --p-main: #E0837E; --p-mid: #B85C57; --p-deep: #4A2020; }
+:root[data-palette="midnight"] { --p-main: #6E7FD1; --p-mid: #454F9E; --p-deep: #1B1E42; }
+:root[data-palette="lagoon"]   { --p-main: #4FBDB0; --p-mid: #2E8A80; --p-deep: #0F3B38; }
+:root[data-palette="blossom"]  { --p-main: #E896B8; --p-mid: #C2597E; --p-deep: #4A1F32; }
+:root[data-palette="sand"]     { --p-main: #B0A99C; --p-mid: #7A7266; --p-deep: #2B2620; }
+:root[data-palette="plum"]     { --p-main: #A66FB5; --p-mid: #7A4488; --p-deep: #34163D; }
+
+/* Light scheme: OS preference (unless the host or visitor chose otherwise) */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]):not([data-scheme]) {
+    color-scheme: light;
+    --bg: color-mix(in srgb, var(--p-main) 7%, #FBF8F1);
+    --bg-2: color-mix(in srgb, var(--p-main) 13%, #F6F2E7);
+    --surface: color-mix(in srgb, var(--p-main) 5%, #FFFDF8);
+    --surface-2: color-mix(in srgb, var(--p-main) 18%, #FFFDF8);
+    --line: color-mix(in srgb, var(--p-deep) 15%, transparent);
+    --line-2: color-mix(in srgb, var(--p-deep) 28%, transparent);
+    --text: color-mix(in srgb, var(--p-deep) 55%, #0B0F0C);
+    --text-2: color-mix(in srgb, var(--p-deep) 45%, #454B46);
+    --text-3: color-mix(in srgb, var(--p-deep) 35%, #6A706A);
+    --accent: color-mix(in srgb, var(--p-mid) 78%, #000000);
+    --accent-soft: color-mix(in srgb, var(--p-main) 26%, transparent);
+    --gold-text: #9C6A10;
+    --header-bg: color-mix(in srgb, var(--bg) 84%, transparent);
+    --glow: color-mix(in srgb, var(--p-main) 26%, transparent);
+    --ring: color-mix(in srgb, var(--p-mid) 22%, transparent);
+    --leaf-opacity: 0.75;
+    --paper-edge: color-mix(in srgb, var(--p-deep) 25%, transparent);
+    --ink-line: #15130F;
+    --shadow: 0 30px 70px -40px rgba(20, 30, 22, 0.45);
+    --bezel-edge: rgba(0, 0, 0, 0.2);
+  }
+}
+/* Light scheme: explicit choice (host stamp or the visitor's pick) */
+:root[data-theme="light"]:not([data-scheme]),
+:root[data-scheme="light"] {
+  color-scheme: light;
+  --bg: color-mix(in srgb, var(--p-main) 7%, #FBF8F1);
+  --bg-2: color-mix(in srgb, var(--p-main) 13%, #F6F2E7);
+  --surface: color-mix(in srgb, var(--p-main) 5%, #FFFDF8);
+  --surface-2: color-mix(in srgb, var(--p-main) 18%, #FFFDF8);
+  --line: color-mix(in srgb, var(--p-deep) 15%, transparent);
+  --line-2: color-mix(in srgb, var(--p-deep) 28%, transparent);
+  --text: color-mix(in srgb, var(--p-deep) 55%, #0B0F0C);
+  --text-2: color-mix(in srgb, var(--p-deep) 45%, #454B46);
+  --text-3: color-mix(in srgb, var(--p-deep) 35%, #6A706A);
+  --accent: color-mix(in srgb, var(--p-mid) 78%, #000000);
+  --accent-soft: color-mix(in srgb, var(--p-main) 26%, transparent);
+  --gold-text: #9C6A10;
+  --header-bg: color-mix(in srgb, var(--bg) 84%, transparent);
+  --glow: color-mix(in srgb, var(--p-main) 26%, transparent);
+  --ring: color-mix(in srgb, var(--p-mid) 22%, transparent);
+  --leaf-opacity: 0.75;
+  --paper-edge: color-mix(in srgb, var(--p-deep) 25%, transparent);
+  --ink-line: #15130F;
+  --shadow: 0 30px 70px -40px rgba(20, 30, 22, 0.45);
+  --bezel-edge: rgba(0, 0, 0, 0.2);
+}
+/* Dark scheme picked on the page wins over a light host stamp / OS */
+:root[data-scheme="dark"], :root[data-scheme="amoled"] { color-scheme: dark; }
+/* AMOLED black, like the app's option: true black grounds */
+:root[data-scheme="amoled"] {
+  --bg: #000000;
+  --bg-2: #000000;
+  --surface: #070707;
+  --surface-2: color-mix(in srgb, var(--p-deep) 45%, #000000);
+  --header-bg: rgba(0, 0, 0, 0.82);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 17px/1.6 var(--body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+img, video { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 6px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gutter); }
+
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(32px, 3.8vw + 16px, 62px);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+h3 { font-size: 18px; line-height: 1.35; font-weight: 700; }
+p { margin: 0; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.lede { font-size: clamp(17px, 0.5vw + 15px, 20px); color: var(--text-2); max-width: 34em; }
+.section { padding-block: clamp(64px, 9vw, 128px); }
+.section--flush { padding-top: 0; }
+.section-head { display: grid; gap: 14px; max-width: 44em; }
+.section-head p:not(.eyebrow) { color: var(--text-2); }
+.section-head--center { justify-items: center; text-align: center; margin-inline: auto; }
+.band { background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 16%, var(--bg-2) 84%, var(--bg) 100%); }
+
+/* ---------- header ---------- */
+.top {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 20;
+  background: var(--header-bg);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid var(--line);
+}
+.top__row { display: flex; align-items: center; gap: clamp(10px, 2vw, 24px); min-height: 64px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-right: auto; }
+.brand img { width: 36px; height: 36px; border-radius: 9px; }
+.brand span { font-family: var(--display); font-size: 27px; letter-spacing: 0.03em; line-height: 1; padding-top: 3px; }
+.top__nav { display: flex; gap: 22px; }
+.top__nav a { text-decoration: none; color: var(--text-2); font-size: 15px; }
+.top__nav a:hover { color: var(--text); }
+.mode-btn {
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  border: 0; border-radius: 50%;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--line-2);
+  cursor: pointer;
+  flex: none;
+}
+.mode-btn:hover { background: var(--accent-soft); }
+.mode-btn svg { width: 19px; height: 19px; }
+.mode-btn .i-sun { display: none; }
+.is-dark .mode-btn .i-sun { display: block; }
+.is-dark .mode-btn .i-moon { display: none; }
+@media (max-width: 820px) { .top__nav { display: none; } }
+@media (max-width: 400px) { .top__row .btn { display: none; } }
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--gold-ink);
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.btn:hover { background: var(--gold-hi); }
+.store-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.store {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 58px;
+  padding: 9px 22px 9px 16px;
+  border-radius: 14px;
+  text-decoration: none;
+  line-height: 1.15;
+  transition: transform 0.2s, background 0.2s;
+}
+.store svg { width: 26px; height: 26px; flex: none; }
+.store__small { display: block; font-size: 12px; letter-spacing: 0.02em; opacity: 0.85; }
+.store__big { display: block; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+.store--apple { background: var(--gold); color: var(--gold-ink); }
+.store--apple:hover { background: var(--gold-hi); transform: translateY(-1px); }
+.store--google { background: transparent; color: var(--text); box-shadow: inset 0 0 0 1.5px var(--line-2); }
+a.store--google:hover { background: var(--accent-soft); transform: translateY(-1px); }
+.store[aria-disabled="true"] { color: var(--text-3); cursor: default; }
+
+/* ---------- hero ---------- */
+.hero { position: relative; overflow: hidden; padding-block: clamp(36px, 6vw, 88px) clamp(56px, 8vw, 104px); }
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10% auto;
+  height: 120%;
+  background:
+    radial-gradient(46% 42% at 72% 44%, var(--glow), transparent 70%),
+    radial-gradient(40% 36% at 12% 8%, rgba(217, 164, 65, 0.08), transparent 70%);
+  pointer-events: none;
+}
+.hero__leaves { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: var(--leaf-opacity); }
+.hero__grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: center;
+}
+.hero__copy { display: grid; gap: 22px; justify-items: start; min-width: 0; }
+.hero__title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(34px, 2.9vw + 26px, 74px);
+  line-height: 0.98;
+  letter-spacing: 0.015em;
+}
+.hero__title .line { display: block; }
+.spot { display: inline-flex; align-items: center; gap: 0.14em; white-space: nowrap; color: var(--gold-text); vertical-align: bottom; }
+.spot__icon, .spot__words { display: inline-grid; }
+.spot__icon { width: 1.02em; height: 1.02em; flex: none; }
+.spot__icon img, .spot__word { grid-area: 1 / 1; transition: opacity 0.5s ease, transform 0.5s ease; }
+.spot__icon img { width: 100%; height: 100%; opacity: 0; transform: scale(0.8) rotate(-8deg); }
+.spot__word { opacity: 0; transform: translateY(0.3em); }
+.spot__icon img.is-on, .spot__word.is-on { opacity: 1; transform: none; }
+.trust { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); }
+.trust li { display: flex; align-items: center; gap: 8px; }
+.trust li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--p-main); }
+
+.hero__device { position: relative; display: grid; justify-items: center; gap: 14px; min-width: 0; }
+.rings {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 760px;
+  max-width: none;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  background: repeating-radial-gradient(circle, transparent 0 62px, var(--ring) 63px 64px);
+  -webkit-mask: radial-gradient(circle, #000 30%, transparent 68%);
+  mask: radial-gradient(circle, #000 30%, transparent 68%);
+  pointer-events: none;
+}
+.device-note { position: relative; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--text-3); text-align: center; }
+
+/* ---------- device frames ---------- */
+.phone {
+  position: relative;
+  margin: 0;
+  width: min(300px, 72vw);
+  padding: 9px;
+  border-radius: 46px;
+  background: #050A07;
+  box-shadow: 0 0 0 1.5px var(--bezel-edge), var(--shadow), 0 0 80px -20px var(--glow);
+}
+.phone__screen { aspect-ratio: 1290 / 2796; border-radius: 38px; overflow: hidden; background: #000; }
+.phone__screen video, .phone__screen img { width: 100%; height: 100%; object-fit: cover; }
+.ipad {
+  margin: 0;
+  width: min(470px, 100%);
+  padding: 12px;
+  border-radius: 30px;
+  background: #050A07;
+  box-shadow: 0 0 0 1.5px var(--bezel-edge), var(--shadow);
+}
+.ipad__screen { aspect-ratio: 1940 / 2752; border-radius: 19px; overflow: hidden; background: #000; }
+.ipad__screen img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ---------- discovery reveal band ---------- */
+.reveal__grid {
+  list-style: none;
+  margin: clamp(32px, 5vw, 56px) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(12px, 2.4vw, 28px);
+}
+.reveal__grid li { display: grid; gap: 10px; justify-items: center; }
+.reveal__grid video { width: 100%; max-width: 190px; aspect-ratio: 1; border-radius: 50%; object-fit: cover; background: #0B170F; box-shadow: 0 0 0 1px var(--line), 0 18px 40px -24px rgba(0, 0, 0, 0.6); }
+.reveal__grid span { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); }
+@media (max-width: 720px) {
+  .reveal__grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+  .reveal__grid::-webkit-scrollbar { display: none; }
+  .reveal__grid li { flex: 0 0 clamp(120px, 38%, 180px); scroll-snap-align: center; }
+}
+
+/* ---------- logging flow + field card ---------- */
+.flow__grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: clamp(40px, 6vw, 88px); align-items: center; }
+.steps { list-style: none; counter-reset: step; margin: 32px 0 0; padding: 0; display: grid; gap: 22px; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 16px; row-gap: 4px; }
+.steps li::before {
+  content: counter(step);
+  grid-row: 1 / span 2;
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  font-family: var(--display);
+  font-size: 22px;
+  color: var(--gold-text);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--gold) 55%, transparent);
+}
+.steps p { color: var(--text-2); font-size: 16px; }
+
+.fieldcard {
+  justify-self: center;
+  width: min(430px, 100%);
+  border-radius: 22px;
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--paper-ink);
+  box-shadow: 0 0 0 3px #16110A, 7px 8px 0 0 #16110A, var(--shadow);
+  rotate: 1.4deg;
+}
+.fieldcard img { width: 100%; height: auto; aspect-ratio: 800 / 540; object-fit: cover; }
+.fieldcard__body { display: grid; gap: 14px; padding: 20px 22px 22px; }
+.fieldcard__name { font-family: var(--display); font-size: clamp(30px, 2vw + 22px, 38px); line-height: 0.95; letter-spacing: 0.03em; }
+.fieldcard__species { font-size: 16px; font-weight: 600; margin-top: -8px; }
+.fieldcard__species i { font-weight: 400; color: #4B5A4F; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.rarity, .xp {
+  display: inline-flex; align-items: center;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-family: var(--mono); font-size: 12px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.rarity--legendary { background: #F3DCA4; color: #5C3F05; box-shadow: inset 0 0 0 1.5px #C38F2C; }
+.xp { background: #1B2A20; color: #E8B95A; }
+.fieldcard__data { margin: 0; display: grid; border-top: 1.5px dashed #BDB292; }
+.fieldcard__data div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 16px; padding: 8px 0; border-bottom: 1.5px dashed #BDB292; font-size: 15px; }
+.fieldcard__data dt { color: #5E6B61; }
+.fieldcard__data dd { margin: 0; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+.fieldcard__xp { font-family: var(--mono); font-size: 12.5px; color: #4B5A4F; }
+.fieldcard__xp b { color: #7A5410; }
+
+/* ---------- feature rows ---------- */
+.feature { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(36px, 7vw, 96px); align-items: center; }
+.feature + .feature { margin-top: clamp(88px, 12vw, 160px); }
+.feature__copy { display: grid; gap: 18px; align-content: start; min-width: 0; }
+.feature__copy > p:not(.eyebrow) { color: var(--text-2); }
+.feature__media { display: grid; justify-items: center; min-width: 0; }
+.feature--flip .feature__media { order: -1; }
+.ticks { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 10px; }
+.ticks li { position: relative; padding-left: 28px; color: var(--text); font-size: 16px; }
+.ticks li::before {
+  content: "";
+  position: absolute; left: 2px; top: 0.45em;
+  width: 11px; height: 7px;
+  border-radius: 0 60% 0 60%;
+  background: var(--p-main);
+  rotate: -28deg;
+}
+.ladder { list-style: none; margin: 6px 0 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.ladder li {
+  display: grid; gap: 2px;
+  padding: 10px 10px 9px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--c) 14%, transparent);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 55%, transparent);
+  min-width: 0;
+}
+.ladder span { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: color-mix(in srgb, var(--c) 80%, var(--text)); overflow-wrap: anywhere; }
+.ladder b { font-size: 17px; font-variant-numeric: tabular-nums; }
+.ladder-note { font-family: var(--mono); font-size: 12.5px; color: var(--text-3); }
+@media (max-width: 560px) {
+  .ladder { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .ladder li:last-child { grid-column: span 2; }
+}
+
+/* ---------- live theme picker ---------- */
+.themer {
+  display: grid;
+  gap: 18px;
+  margin-top: 6px;
+  padding: 20px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+}
+.themer__row { display: grid; gap: 10px; }
+.themer__label { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); }
+.seg { display: grid; grid-template-columns: repeat(4, minmax(0, auto)); justify-content: start; gap: 6px; }
+.chip-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: 40px;
+  padding: 6px 13px;
+  border: 0; border-radius: 999px;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--line-2);
+  color: var(--text-2);
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+}
+.chip-btn:hover { background: var(--accent-soft); }
+.chip-btn[aria-pressed="true"] { background: var(--accent-soft); color: var(--text); box-shadow: inset 0 0 0 2px var(--accent); font-weight: 650; }
+.swatches { display: flex; flex-wrap: wrap; gap: 7px; }
+.swatches .chip-btn { padding-left: 7px; }
+.swatches .chip-btn::before { content: ""; width: 18px; height: 18px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15); }
+.switch-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.switch-row span:first-child { display: grid; }
+.switch-row small { color: var(--text-3); font-size: 13px; }
+.switch {
+  position: relative;
+  width: 52px; height: 32px; flex: none;
+  border: 0; border-radius: 999px;
+  background: var(--line-2);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.switch::after {
+  content: "";
+  position: absolute; top: 4px; left: 4px;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--text);
+  transition: translate 0.2s;
+}
+.switch[aria-checked="true"] { background: var(--accent); }
+.switch[aria-checked="true"]::after { translate: 20px 0; background: var(--bg); }
+.themer__note { font-size: 13.5px; color: var(--text-3); }
+@media (max-width: 480px) {
+  .themer { padding: 16px; }
+  .seg { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ---------- gallery ---------- */
+.gallery__head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 20px; }
+.gallery__nav { display: flex; gap: 10px; }
+.gallery__nav button {
+  width: 46px; height: 46px; border-radius: 50%;
+  border: 0; background: transparent; color: var(--text);
+  box-shadow: inset 0 0 0 1.5px var(--line-2);
+  font-size: 20px; cursor: pointer;
+}
+.gallery__nav button:hover { background: var(--accent-soft); }
+@media (max-width: 560px) { .gallery__nav { display: none; } }
+.shots {
+  list-style: none;
+  margin: 36px calc(var(--gutter) * -1) 0;
+  padding: 0 var(--gutter) 12px;
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-2) transparent;
+}
+.shots li { flex: 0 0 auto; scroll-snap-align: start; }
+.shots img { width: clamp(180px, 22vw, 250px); height: auto; aspect-ratio: 560 / 1211; border-radius: 22px; object-fit: cover; }
+
+/* ---------- privacy tag ---------- */
+.privacy__grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(40px, 6vw, 88px); align-items: center; }
+.tag {
+  position: relative;
+  background: var(--paper);
+  color: var(--paper-ink);
+  border-radius: 20px;
+  padding: 34px clamp(20px, 4vw, 40px) 30px;
+  box-shadow: 0 0 0 1px var(--paper-edge), var(--shadow);
+  rotate: -0.8deg;
+}
+.tag::before {
+  content: "";
+  position: absolute;
+  top: 18px; right: 22px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--bg-2);
+  box-shadow: inset 0 0 0 4px #CFC4A2;
+}
+.tag__title { font-family: var(--display); font-size: clamp(26px, 1.6vw + 20px, 36px); letter-spacing: 0.03em; line-height: 1; padding-right: 40px; }
+.tag__intro { margin-top: 10px; color: #3F4D43; font-size: 16px; }
+.tag__table { margin: 18px 0 0; display: grid; border-top: 1.5px dashed #BDB292; }
+.tag__table div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 14px; padding: 10px 0; border-bottom: 1.5px dashed #BDB292; font-size: 15.5px; }
+.tag__table dt { font-weight: 600; }
+.tag__table dd { margin: 0; font-family: var(--mono); font-size: 13px; color: #4B5A4F; text-align: right; }
+@media (max-width: 520px) {
+  .tag__table div { grid-template-columns: 1fr; }
+  .tag__table dd { text-align: left; }
+}
+.tag__more { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 7px; font-size: 15px; color: #33413A; }
+.tag__more li { padding-left: 22px; position: relative; }
+.tag__more li::before { content: ""; position: absolute; left: 2px; top: 0.55em; width: 9px; height: 9px; border-radius: 50%; box-shadow: inset 0 0 0 2px #4C7A5A; }
+.tag__link { display: inline-block; margin-top: 20px; font-weight: 700; color: #2E5A3D; }
+.fine { margin-top: 18px; font-family: var(--mono); font-size: 12.5px; color: var(--text-3); }
+
+/* ---------- everything else ---------- */
+.extras { list-style: none; margin: clamp(32px, 5vw, 52px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: 0 0 0 1px var(--line); }
+.extras li { display: grid; gap: 8px; align-content: start; padding: 26px 24px 28px; background: var(--bg); }
+.extras h3 { font-size: 17px; }
+.extras p { color: var(--text-2); font-size: 15px; line-height: 1.55; }
+@media (max-width: 1000px) { .extras { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .extras { grid-template-columns: 1fr; } .extras li { padding: 22px 20px 24px; } }
+
+/* ---------- pricing ---------- */
+.price {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px var(--line-2);
+  margin-top: clamp(32px, 5vw, 48px);
+}
+.price__col { display: grid; gap: 12px; align-content: start; padding: clamp(22px, 4vw, 40px); }
+.price__col--pro { background: linear-gradient(160deg, var(--surface-2), var(--surface)); }
+.price__label { font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); }
+.price__col--pro .price__label { color: var(--gold-text); }
+.price__big { font-family: var(--display); font-size: clamp(30px, 2.2vw + 20px, 46px); line-height: 1; letter-spacing: 0.02em; }
+.price__col p:not(.price__label):not(.price__big) { color: var(--text-2); font-size: 16px; }
+.price__col .store-row { margin-top: 8px; }
+
+/* ---------- faq ---------- */
+.faq__list { margin-top: clamp(28px, 4vw, 44px); border-top: 1px solid var(--line); max-width: 860px; }
+.faq__list details { border-bottom: 1px solid var(--line); }
+.faq__list summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center; gap: 20px;
+  padding: 20px 2px;
+  font-weight: 650; font-size: clamp(16px, 0.4vw + 15px, 18px);
+}
+.faq__list summary::-webkit-details-marker { display: none; }
+.faq__list summary::after { content: "+"; flex: none; font-family: var(--mono); font-size: 22px; color: var(--gold-text); transition: rotate 0.2s; }
+.faq__list details[open] summary::after { rotate: 45deg; }
+.faq__list details p { padding: 0 2px 22px; color: var(--text-2); max-width: 44em; }
+
+/* ---------- closing + footer ---------- */
+.closing { text-align: center; }
+.closing .wrap { display: grid; justify-items: center; gap: 22px; }
+.closing__lion { width: 170px; height: 170px; }
+.footer { border-top: 1px solid var(--line); padding-block: 36px calc(36px + env(safe-area-inset-bottom, 0px)); }
+.footer .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; color: var(--text-3); font-size: 14.5px; }
+.footer nav { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+.footer a { color: var(--text-2); text-decoration: none; overflow-wrap: anywhere; }
+.footer a:hover { color: var(--text); }
+
+/* ---------- comic style (the app's optional skin) ---------- */
+:root[data-comic="on"] h2 { text-shadow: 3px 3px 0 var(--accent-soft); }
+:root[data-comic="on"] .band,
+:root[data-comic="on"] .hero {
+  background-image: radial-gradient(color-mix(in srgb, var(--p-main) 20%, transparent) 1.1px, transparent 1.6px);
+  background-size: 9px 9px;
+}
+:root[data-comic="on"] .phone,
+:root[data-comic="on"] .ipad { box-shadow: 0 0 0 3px var(--ink-line), 8px 9px 0 0 var(--ink-line); }
+:root[data-comic="on"] .extras { gap: 14px; background: none; box-shadow: none; overflow: visible; }
+:root[data-comic="on"] .extras li { border-radius: 14px; background: var(--surface); box-shadow: 0 0 0 2.5px var(--ink-line), 5px 5px 0 0 var(--ink-line); }
+:root[data-comic="on"] .price { box-shadow: 0 0 0 3px var(--ink-line), 7px 8px 0 0 var(--ink-line); }
+:root[data-comic="on"] .price__col + .price__col { border-left: 3px solid var(--ink-line); }
+:root[data-comic="on"] .tag { box-shadow: 0 0 0 3px #16110A, 7px 8px 0 0 #16110A; }
+:root[data-comic="on"] .shots img { box-shadow: 0 0 0 3px var(--ink-line), 6px 6px 0 0 var(--ink-line); }
+:root[data-comic="on"] .ladder li { box-shadow: 0 0 0 2px var(--ink-line), 3px 3px 0 0 var(--ink-line); }
+:root[data-comic="on"] .themer { box-shadow: 0 0 0 2.5px var(--ink-line), 6px 6px 0 0 var(--ink-line); }
+:root[data-comic="on"] .store,
+:root[data-comic="on"] .btn { box-shadow: 0 0 0 2px var(--ink-line), 3px 3px 0 0 var(--ink-line); }
+:root[data-comic="on"] .reveal__grid video { box-shadow: 0 0 0 3px var(--ink-line), 5px 5px 0 0 var(--ink-line); }
+@media (max-width: 900px) { :root[data-comic="on"] .price__col + .price__col { border-left: 0; border-top: 3px solid var(--ink-line); } }
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .hero__grid, .flow__grid, .feature, .privacy__grid, .price { grid-template-columns: minmax(0, 1fr); }
+  .feature--flip .feature__media { order: 0; }
+  .hero__device { margin-top: 8px; }
+  .fieldcard { rotate: 0.8deg; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  body, .spot__icon img, .spot__word, .store, .faq__list summary::after, .switch, .switch::after { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap top__row">
+    <a class="brand" href="#top" aria-label="FaunaFolio home">
+      <img src="assets/icons/app-icon.webp" width="36" height="36" alt="">
+      <span>FaunaFolio</span>
+    </a>
+    <nav class="top__nav" aria-label="Sections">
+      <a href="#features">Features</a>
+      <a href="#yours">Themes</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <button class="mode-btn" type="button" id="mode-toggle" aria-label="Switch to light mode">
+      <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+      <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 14.6A8.4 8.4 0 0 1 9.4 3.8a8.4 8.4 0 1 0 10.8 10.8z"/></svg>
+    </button>
+    <a class="btn" data-store-link="apple" href="https://testflight.apple.com/join/55yDdDu9">Get the app</a>
+  </div>
+</header>
+
+<main>
+
+<section class="hero" id="top">
+  <canvas class="hero__leaves" aria-hidden="true"></canvas>
+  <div class="wrap hero__grid">
+    <div class="hero__copy">
+      <p class="eyebrow">Wildlife &amp; pet journal · iPhone and iPad</p>
+      <h1 class="hero__title">
+        <span class="sr-only">That stray cat deserves better than your camera roll.</span>
+        <span aria-hidden="true">
+          <span class="line">That <span class="spot">
+            <span class="spot__icon">
+              <img class="is-on" src="assets/anim/icon-cat.webp" alt="" width="240" height="240">
+              <img src="assets/anim/icon-lizard.webp" alt="" width="240" height="240" loading="lazy">
+              <img src="assets/anim/icon-fox.webp" alt="" width="240" height="240" loading="lazy">
+              <img src="assets/anim/icon-lion.webp" alt="" width="240" height="240" loading="lazy">
+              <img src="assets/anim/icon-squirrel.webp" alt="" width="240" height="240" loading="lazy">
+              <img src="assets/anim/icon-otter.webp" alt="" width="240" height="240" loading="lazy">
+              <img src="assets/anim/icon-hedgehog.webp" alt="" width="240" height="240" loading="lazy">
+              <img src="assets/anim/icon-dog.webp" alt="" width="240" height="240" loading="lazy">
+            </span>
+            <span class="spot__words">
+              <span class="spot__word is-on">stray cat</span>
+              <span class="spot__word">holiday lizard</span>
+              <span class="spot__word">backyard fox</span>
+              <span class="spot__word">zoo lion</span>
+              <span class="spot__word">park squirrel</span>
+              <span class="spot__word">river otter</span>
+              <span class="spot__word">hedgehog</span>
+              <span class="spot__word">neighbor's dog</span>
+            </span>
+          </span></span>
+          <span class="line">deserves better than your camera roll.</span>
+        </span>
+      </h1>
+      <p class="lede">Snap any animal and FaunaFolio names the species right on your phone, pins where you met it, and files it in a journal you'll actually look back at.</p>
+      <div class="store-row">
+        <a class="store store--apple" data-store-link="apple" href="https://testflight.apple.com/join/55yDdDu9">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.6"/><path d="M10.5 18.5h3"/></svg>
+          <span><span class="store__small" data-store-small>Try the beta on</span><span class="store__big" data-store-big>TestFlight</span></span>
+        </a>
+        <span class="store store--google" data-store-link="google" aria-disabled="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>
+          <span><span class="store__small" data-store-small>Coming soon to</span><span class="store__big">Google Play</span></span>
+        </span>
+      </div>
+      <ul class="trust" aria-label="Promises">
+        <li>No ads</li><li>No account</li><li>No tracking</li><li>Works offline</li>
+      </ul>
+    </div>
+    <div class="hero__device">
+      <div class="rings" aria-hidden="true"></div>
+      <figure class="phone">
+        <div class="phone__screen">
+          <video src="assets/video/capture.mp4" poster="assets/video/capture.webp" autoplay muted loop playsinline preload="metadata" width="600" height="1300"
+            aria-label="Screen recording: photographing a lion, which FaunaFolio identifies and adds to the journal"></video>
+        </div>
+      </figure>
+      <p class="device-note">Real screen recording · London Zoo, Sept 2026</p>
+    </div>
+  </div>
+</section>
+
+<section class="section band" aria-labelledby="reveal-title">
+  <div class="wrap">
+    <div class="section-head section-head--center">
+      <p class="eyebrow">The discovery moment</p>
+      <h2 id="reveal-title">Every find gets its own reveal</h2>
+      <p>Log a sighting and the animal draws itself in before your new entry lands. Sixty animals have their own animation, from foxes and otters to platypuses and octopuses, and every bird and fish gets one too.</p>
+    </div>
+    <ul class="reveal__grid">
+      <li><video muted loop playsinline preload="none" poster="assets/anim/fox.webp" src="assets/anim/fox.mp4" aria-label="Fox discovery animation"></video><span>Fox</span></li>
+      <li><video muted loop playsinline preload="none" poster="assets/anim/otter.webp" src="assets/anim/otter.mp4" aria-label="Otter discovery animation"></video><span>Otter</span></li>
+      <li><video muted loop playsinline preload="none" poster="assets/anim/platypus.webp" src="assets/anim/platypus.mp4" aria-label="Platypus discovery animation"></video><span>Platypus</span></li>
+      <li><video muted loop playsinline preload="none" poster="assets/anim/tortoise.webp" src="assets/anim/tortoise.mp4" aria-label="Tortoise discovery animation"></video><span>Tortoise</span></li>
+      <li><video muted loop playsinline preload="none" poster="assets/anim/elephant.webp" src="assets/anim/elephant.mp4" aria-label="Elephant discovery animation"></video><span>Elephant</span></li>
+      <li><video muted loop playsinline preload="none" poster="assets/anim/hedgehog.webp" src="assets/anim/hedgehog.mp4" aria-label="Hedgehog discovery animation"></video><span>Hedgehog</span></li>
+      <li><video muted loop playsinline preload="none" poster="assets/anim/panda.webp" src="assets/anim/panda.mp4" aria-label="Panda discovery animation"></video><span>Panda</span></li>
+      <li><video muted loop playsinline preload="none" poster="assets/anim/frog.webp" src="assets/anim/frog.mp4" aria-label="Frog discovery animation"></video><span>Frog</span></li>
+      <li><video muted loop playsinline preload="none" poster="assets/anim/giraffe.webp" src="assets/anim/giraffe.mp4" aria-label="Giraffe discovery animation"></video><span>Giraffe</span></li>
+      <li><video muted loop playsinline preload="none" poster="assets/anim/octopus.webp" src="assets/anim/octopus.mp4" aria-label="Octopus discovery animation"></video><span>Octopus</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="features" aria-labelledby="flow-title">
+  <div class="wrap flow__grid">
+    <div>
+      <div class="section-head">
+        <p class="eyebrow">One tap, no forms</p>
+        <h2 id="flow-title">From photo to field entry in seconds</h2>
+      </div>
+      <ol class="steps">
+        <li>
+          <h3>Snap it, or pick it from your library</h3>
+          <p>Tap the shutter. Hold it instead to import from Photos, pull straight from your own Immich server, or type the sighting in by hand.</p>
+        </li>
+        <li>
+          <h3>Identified on your phone</h3>
+          <p>On-device recognition names common animals without uploading anything. When it isn't sure, it offers the alternatives it saw.</p>
+        </li>
+        <li>
+          <h3>Named, placed and dated</h3>
+          <p>Every sighting gets its own field name, like “Wild Traveler”, plus place, time and weather from your location and the photo itself.</p>
+        </li>
+        <li>
+          <h3>Scored</h3>
+          <p>XP for every log, more for rarer animals, and a bonus the first time you meet a species.</p>
+        </li>
+      </ol>
+    </div>
+    <article class="fieldcard" aria-label="Example journal entry">
+      <img src="assets/img/lion-card.webp" alt="A lion roaring behind a fence" width="800" height="540" loading="lazy">
+      <div class="fieldcard__body">
+        <p class="fieldcard__name">Wild Traveler</p>
+        <p class="fieldcard__species">Lion <i>Panthera leo</i></p>
+        <div class="chips"><span class="rarity rarity--legendary">Legendary</span><span class="xp">+205 XP</span></div>
+        <dl class="fieldcard__data">
+          <div><dt>Sighted</dt><dd>31 Oct 2025, 08:00</dd></div>
+          <div><dt>Location</dt><dd>Bengaluru, India</dd></div>
+          <div><dt>Category</dt><dd>Mammal</dd></div>
+          <div><dt>Habitat</dt><dd>Grassland</dd></div>
+        </dl>
+        <p class="fieldcard__xp">50 base + 80 Legendary + 75 new species = <b>205 XP</b></p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="section section--flush" aria-label="Features">
+  <div class="wrap">
+
+    <article class="feature" id="map">
+      <div class="feature__copy">
+        <p class="eyebrow">Sightings map</p>
+        <h2>See everywhere you've been</h2>
+        <p>Every located sighting lands on a live map. Zoom out for a continent of clusters; zoom in and the pins turn into your own photos.</p>
+        <ul class="ticks">
+          <li>A heat layer shows where you find the most animals</li>
+          <li>Tap a crowded spot for a list instead of endless zooming</li>
+          <li>Save a map area for offline use before a trip</li>
+          <li>Fix missing locations in bulk: search a place or paste coordinates</li>
+        </ul>
+      </div>
+      <div class="feature__media">
+        <figure class="phone">
+          <div class="phone__screen">
+            <video muted loop playsinline preload="none" poster="assets/video/map.webp" src="assets/video/map.mp4" width="600" height="1300"
+              aria-label="Screen recording: zooming the sightings map from London Zoo out to Europe, with the heat layer on"></video>
+          </div>
+        </figure>
+      </div>
+    </article>
+
+    <article class="feature feature--flip" id="trips">
+      <div class="feature__copy">
+        <p class="eyebrow">Trips &amp; scrapbooks</p>
+        <h2>Trips that put themselves together</h2>
+        <p>FaunaFolio notices sightings that belong together, like a zoo visit, a weekend in Kotor or a summer in southern Italy, and suggests the trip. Accept it and you get a flip-through scrapbook to keep or share.</p>
+        <ul class="ticks">
+          <li>Suggested from your own dates and places</li>
+          <li>Scrapbook recaps that open with the best finds</li>
+          <li>Share as photos, or as a package that opens in FaunaFolio</li>
+        </ul>
+      </div>
+      <div class="feature__media">
+        <figure class="phone">
+          <div class="phone__screen">
+            <video muted loop playsinline preload="none" poster="assets/video/trips.webp" src="assets/video/trips.mp4" width="600" height="1300"
+              aria-label="Screen recording: the Trips list with London Zoo, Kotor and Sorrento trips, opening two of them"></video>
+          </div>
+        </figure>
+      </div>
+    </article>
+
+    <article class="feature" id="pets">
+      <div class="feature__copy">
+        <p class="eyebrow">Pets &amp; collections</p>
+        <h2>Your own animals get their own page</h2>
+        <p>Tag a pet once and every photo of them gathers in one place. Mark a favourite as Special for a full profile with feeding times, habits, a gallery and a cover photo you choose.</p>
+        <ul class="ticks">
+          <li>One photo can belong to two pets who are always together</li>
+          <li>Collections for anything: shelter animals, school pets, the cats on your street</li>
+          <li>A duplicate finder merges repeat sightings of the same animal</li>
+        </ul>
+      </div>
+      <div class="feature__media">
+        <figure class="ipad">
+          <div class="ipad__screen">
+            <img src="assets/img/ipad-spepet.webp" alt="FaunaFolio on iPad: the special pet page for a cat named Misu, with sightings count, feeding times, habits and a photo gallery" width="900" height="1277" loading="lazy">
+          </div>
+        </figure>
+      </div>
+    </article>
+
+    <article class="feature feature--flip" id="progress">
+      <div class="feature__copy">
+        <p class="eyebrow">XP, streaks &amp; achievements</p>
+        <h2>Level up with every find</h2>
+        <p>Every species has a rarity, from Common to Legendary. Rarer finds earn more, weekly streaks keep you going, and your year gets its own recap.</p>
+        <ul class="ladder" aria-label="XP per sighting by rarity">
+          <li style="--c: var(--r-common)"><span>Common</span><b>50 XP</b></li>
+          <li style="--c: var(--r-uncommon)"><span>Uncommon</span><b>70 XP</b></li>
+          <li style="--c: var(--r-rare)"><span>Rare</span><b>90 XP</b></li>
+          <li style="--c: var(--r-epic)"><span>Epic</span><b>110 XP</b></li>
+          <li style="--c: var(--r-legendary)"><span>Legendary</span><b>130 XP</b></li>
+        </ul>
+        <p class="ladder-note">Plus 75 XP the first time you log a species. A new level every 500 XP.</p>
+        <ul class="ticks">
+          <li>Weekly streaks: one sighting a week keeps it alive</li>
+          <li>An activity heatmap of your whole history</li>
+          <li>Achievements, rarest finds and a yearly recap</li>
+        </ul>
+      </div>
+      <div class="feature__media">
+        <figure class="ipad">
+          <div class="ipad__screen">
+            <img src="assets/img/ipad-profile.webp" alt="FaunaFolio on iPad: the Stats page with level, XP bar, species and country counts, rarest finds, activity heatmap and achievements" width="900" height="1277" loading="lazy">
+          </div>
+        </figure>
+      </div>
+    </article>
+
+    <article class="feature" id="yours">
+      <div class="feature__copy">
+        <p class="eyebrow">Appearance &amp; widgets</p>
+        <h2>Make it look like yours</h2>
+        <p>The app comes in eleven colour palettes, light, dark or AMOLED black, and an optional comic style with ink borders and trading-card frames. Home-screen widgets follow along, or get a look of their own. This page runs on the same themes, so try them here.</p>
+        <div class="themer" role="group" aria-label="Try the app's themes on this page">
+          <div class="themer__row">
+            <span class="themer__label" id="lbl-theme">Theme</span>
+            <div class="seg" role="group" aria-labelledby="lbl-theme">
+              <button class="chip-btn" type="button" data-scheme-set="system" aria-pressed="true">Follow system</button>
+              <button class="chip-btn" type="button" data-scheme-set="light" aria-pressed="false">Light</button>
+              <button class="chip-btn" type="button" data-scheme-set="dark" aria-pressed="false">Dark</button>
+              <button class="chip-btn" type="button" data-scheme-set="amoled" aria-pressed="false">AMOLED black</button>
+            </div>
+          </div>
+          <div class="themer__row">
+            <span class="themer__label" id="lbl-color">Colour</span>
+            <div class="swatches" role="group" aria-labelledby="lbl-color">
+              <button class="chip-btn" type="button" data-palette-set="forest" aria-pressed="true" style="--c: #6FA97E">Forest</button>
+              <button class="chip-btn" type="button" data-palette-set="river" aria-pressed="false" style="--c: #64A0BE">River</button>
+              <button class="chip-btn" type="button" data-palette-set="dusk" aria-pressed="false" style="--c: #9B86C8">Dusk</button>
+              <button class="chip-btn" type="button" data-palette-set="ember" aria-pressed="false" style="--c: #D08B5B">Ember</button>
+              <button class="chip-btn" type="button" data-palette-set="meadow" aria-pressed="false" style="--c: #A9C24A">Meadow</button>
+              <button class="chip-btn" type="button" data-palette-set="coral" aria-pressed="false" style="--c: #E0837E">Coral</button>
+              <button class="chip-btn" type="button" data-palette-set="midnight" aria-pressed="false" style="--c: #6E7FD1">Midnight</button>
+              <button class="chip-btn" type="button" data-palette-set="lagoon" aria-pressed="false" style="--c: #4FBDB0">Lagoon</button>
+              <button class="chip-btn" type="button" data-palette-set="blossom" aria-pressed="false" style="--c: #E896B8">Blossom</button>
+              <button class="chip-btn" type="button" data-palette-set="sand" aria-pressed="false" style="--c: #B0A99C">Sand</button>
+              <button class="chip-btn" type="button" data-palette-set="plum" aria-pressed="false" style="--c: #A66FB5">Plum</button>
+            </div>
+          </div>
+          <div class="switch-row">
+            <span><span class="themer__label" id="lbl-comic">Comic style</span><small>Ink borders, halftone and hard shadows</small></span>
+            <button class="switch" type="button" role="switch" id="comic-toggle" aria-checked="false" aria-labelledby="lbl-comic"></button>
+          </div>
+          <p class="themer__note">Your pick is remembered in this browser only.</p>
+        </div>
+      </div>
+      <div class="feature__media">
+        <figure class="phone">
+          <div class="phone__screen">
+            <video muted loop playsinline preload="none" poster="assets/video/themes.webp" src="assets/video/themes.mp4" width="600" height="1300"
+              aria-label="Screen recording: switching palettes, comic style and dark mode in the app's Appearance settings"></video>
+          </div>
+        </figure>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section class="section" aria-labelledby="gallery-title">
+  <div class="wrap">
+    <div class="gallery__head">
+      <div class="section-head">
+        <p class="eyebrow">A closer look</p>
+        <h2 id="gallery-title">Straight from the App Store</h2>
+      </div>
+      <div class="gallery__nav" aria-hidden="true">
+        <button type="button" data-scroll="-1" tabindex="-1">&larr;</button>
+        <button type="button" data-scroll="1" tabindex="-1">&rarr;</button>
+      </div>
+    </div>
+    <ul class="shots" tabindex="0" aria-label="App Store screenshots, scroll sideways">
+      <li><img src="assets/gallery/shot-1.webp" alt="Every sighting organised automatically: the journal grid" width="560" height="1211" loading="lazy"></li>
+      <li><img src="assets/gallery/shot-2.webp" alt="Hunt down Legendary finds: a lion's journal entry" width="560" height="1211" loading="lazy"></li>
+      <li><img src="assets/gallery/shot-3.webp" alt="Level up with every sighting: the stats page" width="560" height="1211" loading="lazy"></li>
+      <li><img src="assets/gallery/shot-4.webp" alt="See everywhere you have explored: the sightings map" width="560" height="1211" loading="lazy"></li>
+      <li><img src="assets/gallery/shot-5.webp" alt="Turn trips into scrapbook recaps" width="560" height="1211" loading="lazy"></li>
+      <li><img src="assets/gallery/shot-6.webp" alt="Give your pets their own page" width="560" height="1211" loading="lazy"></li>
+      <li><img src="assets/gallery/shot-7.webp" alt="Snap a photo and the species is identified" width="560" height="1211" loading="lazy"></li>
+      <li><img src="assets/gallery/shot-9.webp" alt="Scrapbooks for pets, collections and trips" width="560" height="1211" loading="lazy"></li>
+    </ul>
+  </div>
+</section>
+
+<section class="section band" id="privacy" aria-labelledby="privacy-title">
+  <div class="wrap privacy__grid">
+    <div class="section-head">
+      <p class="eyebrow">Privacy</p>
+      <h2 id="privacy-title">Your sightings stay on your phone</h2>
+      <p>FaunaFolio has no servers of its own, so there's nothing to sign up for and nothing to leak. Your journal, photos and locations live in the app's private storage on your device.</p>
+      <p class="fine">This website doesn't track you either: no analytics, no tracking cookies.</p>
+    </div>
+    <div class="tag">
+      <p class="tag__title">What it talks to, and why</p>
+      <p class="tag__intro">No accounts, no analytics, no ad SDKs. The app only goes online for:</p>
+      <dl class="tag__table">
+        <div><dt>Map tiles</dt><dd>OpenStreetMap</dd></div>
+        <div><dt>Weather for a sighting</dt><dd>Open-Meteo</dd></div>
+        <div><dt>Place names &amp; search</dt><dd>Your phone's geocoder</dd></div>
+        <div><dt>Your photo server</dt><dd>Immich, only if you add one</dd></div>
+      </dl>
+      <ul class="tag__more">
+        <li>App Lock with Face ID, Touch ID or your passcode</li>
+        <li>Backups are one encrypted file, protected by your password</li>
+        <li>Crash logs stay on your phone unless you choose to share one</li>
+      </ul>
+      <a class="tag__link" data-link="privacy" href="https://persieghini.github.io/privacy-policies/faunafolio/">Read the full privacy policy →</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="extras-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">And the rest</p>
+      <h2 id="extras-title">Small things that add up</h2>
+    </div>
+    <ul class="extras">
+      <li><h3>Smart Import</h3><p>Point it at your photo library and it finds the animals, groups each one's shots and suggests the trips they came from.</p></li>
+      <li><h3>Immich, if you run it</h3><p>Browse and log photos straight from your self-hosted Immich server. The originals stay on your server.</p></li>
+      <li><h3>A field guide in your pocket</h3><p>Nearly 3,000 species to search, from the zoo's okapi to the common toad in your pond, plus a wanted list.</p></li>
+      <li><h3>Voice field notes</h3><p>Say what the animal was up to. It's transcribed on your phone and editable before you save.</p></li>
+      <li><h3>Home-screen widgets</h3><p>Your streak, your stats, your rarest find and your special pet. Tap one to jump straight there.</p></li>
+      <li><h3>iPhone and iPad</h3><p>Layouts and photo grids that use the whole screen, from a small phone to a big iPad.</p></li>
+      <li><h3>Nine languages</h3><p>English, Deutsch, Español, Français, हिन्दी, Italiano, ಕನ್ನಡ, Português and 中文.</p></li>
+      <li><h3>Your data, your exports</h3><p>One encrypted backup with everything, plus CSV and GPX exports for spreadsheets and GPS tools.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="section section--flush" id="pricing" aria-labelledby="pricing-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Pricing</p>
+      <h2 id="pricing-title">Try everything. Pay once if you love it.</h2>
+    </div>
+    <div class="price">
+      <div class="price__col">
+        <p class="price__label">Free</p>
+        <p class="price__big">Your first 12 sightings</p>
+        <p>Every feature unlocked from the first launch: recognition, the map, trips, pets, backups and exports. No account, no card.</p>
+      </div>
+      <div class="price__col price__col--pro">
+        <p class="price__label">FaunaFolio Pro</p>
+        <p class="price__big">Unlimited, for good</p>
+        <p>One purchase removes the cap forever. Never a subscription. The price for your country is shown in the App Store.</p>
+        <div class="store-row">
+          <a class="store store--apple" data-store-link="apple" href="https://testflight.apple.com/join/55yDdDu9">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.6"/><path d="M10.5 18.5h3"/></svg>
+            <span><span class="store__small" data-store-small>Try the beta on</span><span class="store__big" data-store-big>TestFlight</span></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq" aria-labelledby="faq-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Questions</p>
+      <h2 id="faq-title">Good to know</h2>
+    </div>
+    <div class="faq__list">
+      <details>
+        <summary>Which animals can it recognise?</summary>
+        <p>Common animals: pets, farm animals, garden birds and zoo favourites like lions, zebras and giraffes. For anything else, search the built-in catalog of nearly 3,000 species, or type your own name for it.</p>
+      </details>
+      <details>
+        <summary>Does it work without an internet connection?</summary>
+        <p>Yes. Logging, recognition, your journal and your stats all work offline. The map shows areas you've viewed or saved before; weather lookups and new map areas need a connection.</p>
+      </details>
+      <details>
+        <summary>Where are my photos stored?</summary>
+        <p>In the app's private storage on your device. Shots you take in the app are also saved to your Photos library. If you log from Immich, the original stays on your server and the app keeps a small thumbnail.</p>
+      </details>
+      <details>
+        <summary>How do I move my journal to a new phone?</summary>
+        <p>Go to Settings, then Backup &amp; restore. Export everything into one encrypted file, then restore that file on the new phone.</p>
+      </details>
+      <details>
+        <summary>Is there an Android version?</summary>
+        <p>It's on the way to Google Play. The iPhone and iPad version comes first.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="section section--flush closing" aria-labelledby="closing-title">
+  <div class="wrap">
+    <img class="closing__lion" src="assets/anim/icon-lion.webp" alt="" width="240" height="240" loading="lazy">
+    <h2 id="closing-title">Start your journal today</h2>
+    <p class="lede">Your next sighting is probably closer than you think.</p>
+    <div class="store-row" style="justify-content: center;">
+      <a class="store store--apple" data-store-link="apple" href="https://testflight.apple.com/join/55yDdDu9">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.6"/><path d="M10.5 18.5h3"/></svg>
+        <span><span class="store__small" data-store-small>Try the beta on</span><span class="store__big" data-store-big>TestFlight</span></span>
+      </a>
+      <span class="store store--google" data-store-link="google" aria-disabled="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>
+        <span><span class="store__small" data-store-small>Coming soon to</span><span class="store__big">Google Play</span></span>
+      </span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <p>© 2026 FaunaFolio</p>
+    <nav aria-label="Footer">
+      <a data-link="privacy" href="https://persieghini.github.io/privacy-policies/faunafolio/">Privacy policy</a>
+      <a href="mailto:persieghinidev@gmail.com">Support: persieghinidev@gmail.com</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   EDIT HERE when the stores go live. Paste the full URLs; leave
+   a value empty ("") to keep showing the beta / coming-soon state.
+   ============================================================ */
+var LINKS = {
+  appStore: "",    // e.g. "https://apps.apple.com/app/id0000000000"
+  playStore: "",   // e.g. "https://play.google.com/store/apps/details?id=com.persieghini.faunafolio"
+  testFlight: "https://testflight.apple.com/join/55yDdDu9",
+  privacy: "privacy/"
+};
+
+(function applyLinks() {
+  document.querySelectorAll('[data-store-link="apple"]').forEach(function (el) {
+    el.href = LINKS.appStore || LINKS.testFlight;
+    var small = el.querySelector("[data-store-small]");
+    var big = el.querySelector("[data-store-big]");
+    if (LINKS.appStore && small && big) { small.textContent = "Download on the"; big.textContent = "App Store"; }
+  });
+  if (LINKS.playStore) {
+    document.querySelectorAll('[data-store-link="google"]').forEach(function (el) {
+      var a = document.createElement("a");
+      a.className = el.className;
+      a.href = LINKS.playStore;
+      a.innerHTML = el.innerHTML;
+      var small = a.querySelector("[data-store-small]");
+      if (small) small.textContent = "Get it on";
+      el.replaceWith(a);
+    });
+  }
+  document.querySelectorAll('[data-link="privacy"]').forEach(function (el) { el.href = LINKS.privacy; });
+})();
+
+var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* Theme engine: scheme (system / light / dark / AMOLED), palette, comic style */
+(function themes() {
+  var root = document.documentElement;
+  var lightMQ = window.matchMedia("(prefers-color-scheme: light)");
+  var modeBtn = document.getElementById("mode-toggle");
+  var comicBtn = document.getElementById("comic-toggle");
+  var metaTheme = document.querySelector('meta[name="theme-color"]');
+  function save(key, value) {
+    try { if (value) { localStorage.setItem(key, value); } else { localStorage.removeItem(key); } } catch (e) {}
+  }
+  function isDark() {
+    var s = root.getAttribute("data-scheme");
+    if (s) return s !== "light";
+    var t = root.getAttribute("data-theme");
+    if (t) return t !== "light";
+    return !lightMQ.matches;
+  }
+  function sync() {
+    var scheme = root.getAttribute("data-scheme") || "system";
+    var palette = root.getAttribute("data-palette") || "forest";
+    var comic = root.getAttribute("data-comic") === "on";
+    var dark = isDark();
+    root.classList.toggle("is-dark", dark);
+    document.querySelectorAll("[data-scheme-set]").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.dataset.schemeSet === scheme));
+    });
+    document.querySelectorAll("[data-palette-set]").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.dataset.paletteSet === palette));
+    });
+    if (comicBtn) comicBtn.setAttribute("aria-checked", String(comic));
+    if (modeBtn) modeBtn.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+    if (metaTheme) metaTheme.setAttribute("content", getComputedStyle(document.body).backgroundColor);
+  }
+  function setScheme(s) {
+    if (!s || s === "system") { root.removeAttribute("data-scheme"); save("ff-scheme", null); }
+    else { root.setAttribute("data-scheme", s); save("ff-scheme", s); }
+    sync();
+  }
+  function setPalette(p) {
+    if (!p || p === "forest") { root.removeAttribute("data-palette"); save("ff-palette", null); }
+    else { root.setAttribute("data-palette", p); save("ff-palette", p); }
+    sync();
+  }
+  document.querySelectorAll("[data-scheme-set]").forEach(function (b) {
+    b.addEventListener("click", function () { setScheme(b.dataset.schemeSet); });
+  });
+  document.querySelectorAll("[data-palette-set]").forEach(function (b) {
+    b.addEventListener("click", function () { setPalette(b.dataset.paletteSet); });
+  });
+  if (comicBtn) comicBtn.addEventListener("click", function () {
+    var on = root.getAttribute("data-comic") !== "on";
+    if (on) { root.setAttribute("data-comic", "on"); save("ff-comic", "on"); }
+    else { root.removeAttribute("data-comic"); save("ff-comic", null); }
+    sync();
+  });
+  if (modeBtn) modeBtn.addEventListener("click", function () { setScheme(isDark() ? "light" : "dark"); });
+  if (lightMQ.addEventListener) lightMQ.addEventListener("change", sync);
+  new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+  sync();
+})();
+
+/* Rotating animal in the headline */
+(function rotator() {
+  var words = document.querySelectorAll(".spot__word");
+  var icons = document.querySelectorAll(".spot__icon img");
+  if (reduceMotion || words.length < 2) return;
+  var i = 0;
+  setInterval(function () {
+    if (document.hidden) return;
+    words[i].classList.remove("is-on"); icons[i].classList.remove("is-on");
+    i = (i + 1) % words.length;
+    words[i].classList.add("is-on"); icons[i].classList.add("is-on");
+  }, 2600);
+})();
+
+/* Videos play only while on screen */
+(function lazyVideos() {
+  var vids = document.querySelectorAll("video");
+  if (reduceMotion) {
+    vids.forEach(function (v) { v.removeAttribute("autoplay"); v.pause(); v.controls = true; });
+    return;
+  }
+  if (!("IntersectionObserver" in window)) {
+    vids.forEach(function (v) { v.play().catch(function () {}); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      var v = e.target;
+      if (e.isIntersecting) { v.play().catch(function () {}); } else { v.pause(); }
+    });
+  }, { threshold: 0.25 });
+  vids.forEach(function (v) { io.observe(v); });
+})();
+
+/* Gallery arrows */
+(function gallery() {
+  var track = document.querySelector(".shots");
+  document.querySelectorAll("[data-scroll]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      track.scrollBy({ left: Number(b.dataset.scroll) * track.clientWidth * 0.8, behavior: reduceMotion ? "auto" : "smooth" });
+    });
+  });
+})();
+
+/* Drifting leaves behind the hero, like the app's discovery screen */
+(function leaves() {
+  var c = document.querySelector(".hero__leaves");
+  if (!c || !c.getContext) return;
+  var ctx = c.getContext("2d");
+  var colors = ["111,169,126", "76,122,90", "217,164,65", "176,106,76", "183,205,187"];
+  var W = 0, H = 0, list = [], running = false, raf = 0;
+  function size() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = c.clientWidth; H = c.clientHeight;
+    c.width = Math.round(W * dpr); c.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function seed() {
+    var n = Math.round(Math.min(46, Math.max(16, W / 32)));
+    list = [];
+    for (var k = 0; k < n; k++) {
+      list.push({
+        x: Math.random() * W, y: Math.random() * H,
+        s: 3 + Math.random() * 5.5, r: Math.random() * 6.28,
+        vr: (Math.random() - 0.5) * 0.02, vy: 0.18 + Math.random() * 0.4,
+        vx: (Math.random() - 0.5) * 0.2, sway: Math.random() * 100,
+        c: colors[(Math.random() * colors.length) | 0], a: 0.25 + Math.random() * 0.45
+      });
+    }
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    for (var k = 0; k < list.length; k++) {
+      var l = list[k];
+      ctx.save(); ctx.translate(l.x, l.y); ctx.rotate(l.r);
+      ctx.fillStyle = "rgba(" + l.c + "," + l.a + ")";
+      ctx.beginPath(); ctx.ellipse(0, 0, l.s, l.s * 0.42, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+    }
+  }
+  function step() {
+    for (var k = 0; k < list.length; k++) {
+      var l = list[k];
+      l.y += l.vy; l.x += l.vx + Math.sin((l.y + l.sway) / 55) * 0.22; l.r += l.vr;
+      if (l.y > H + 12) { l.y = -12; l.x = Math.random() * W; }
+    }
+    draw();
+    if (running) raf = requestAnimationFrame(step);
+  }
+  function start() { if (!running && !reduceMotion) { running = true; raf = requestAnimationFrame(step); } }
+  function stop() { running = false; cancelAnimationFrame(raf); }
+  size(); seed(); draw();
+  var lastW = W;
+  window.addEventListener("resize", function () { size(); if (Math.abs(W - lastW) > 40) { seed(); lastW = W; } draw(); });
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (e) { if (e[0].isIntersecting) { start(); } else { stop(); } }).observe(c);
+  } else { start(); }
+  document.addEventListener("visibilitychange", function () { if (document.hidden) { stop(); } else { start(); } });
+})();
+</script>
+</body>
+</html>
