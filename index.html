@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Apps — persieghini</title>
+<meta name="description" content="Apps built by persieghini: FaunaFolio, Heirmos, Magnetify and PennyWatt — with links to each one's privacy policy.">
+<meta name="theme-color" content="#0A0A0D">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:,">
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #0A0A0D;
+  --bg-2: #101014;
+  --surface: #16161B;
+  --line: rgba(255,255,255,.09);
+  --line-2: rgba(255,255,255,.16);
+  --text: #F1F1F3;
+  --text-2: #A7A7AF;
+  --text-3: #6E6E78;
+  --display: -apple-system, "SF Pro Display", "Segoe UI", system-ui, sans-serif;
+  --body: -apple-system, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background:
+    radial-gradient(60% 50% at 15% -10%, rgba(111,169,126,.10), transparent 60%),
+    radial-gradient(55% 45% at 85% 0%, rgba(163,116,232,.09), transparent 60%),
+    var(--bg);
+  color: var(--text);
+  font: 16px/1.6 var(--body);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+a { color: inherit; }
+main { max-width: 900px; margin-inline: auto; padding: clamp(48px,9vw,96px) 20px clamp(64px,10vw,120px); }
+
+.eyebrow {
+  font-family: var(--mono); font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--text-3); margin: 0 0 14px;
+}
+h1 {
+  font-family: var(--display); font-weight: 700; letter-spacing: -.02em;
+  font-size: clamp(34px, 5vw, 48px); line-height: 1.05; margin: 0 0 12px;
+}
+.lede { color: var(--text-2); font-size: 17px; max-width: 46em; margin: 0; }
+
+.grid {
+  list-style: none; margin: clamp(36px,6vw,56px) 0 0; padding: 0;
+  display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px;
+}
+@media (max-width: 620px) { .grid { grid-template-columns: 1fr; } }
+
+.card {
+  position: relative;
+  display: flex; flex-direction: column; gap: 16px;
+  padding: 22px 22px 20px;
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line);
+  text-decoration: none;
+  overflow: hidden;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.card::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(120px 90px at 20% 0%, color-mix(in srgb, var(--c) 24%, transparent), transparent 70%);
+  opacity: .8;
+}
+.card:hover, .card:focus-visible {
+  transform: translateY(-3px);
+  background: color-mix(in srgb, var(--surface) 88%, var(--c) 12%);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 55%, var(--line-2));
+}
+.card:focus-visible { outline: 2px solid var(--c); outline-offset: 3px; }
+
+.card__top { display: flex; align-items: flex-start; gap: 14px; position: relative; }
+.card__icon { width: 56px; height: 56px; border-radius: 14px; flex: none; box-shadow: 0 6px 18px -8px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.08); }
+.card__heading { min-width: 0; padding-top: 2px; }
+.card__name { font-family: var(--display); font-weight: 700; font-size: 19px; letter-spacing: -.01em; margin: 0; }
+.card__tagline { margin: 4px 0 0; color: var(--text-2); font-size: 14.5px; line-height: 1.45; }
+
+.card__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; position: relative; margin-top: auto; }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
+  padding: 5px 10px; border-radius: 999px;
+  color: color-mix(in srgb, var(--c) 78%, white 10%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 40%, transparent);
+}
+.pill--live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--c); }
+.goto { font-size: 13px; color: var(--text-3); display: inline-flex; align-items: center; gap: 4px; }
+.card:hover .goto, .card:focus-visible .goto { color: color-mix(in srgb, var(--c) 75%, white 15%); }
+.goto svg { width: 13px; height: 13px; transition: translate .18s ease; }
+.card:hover .goto svg, .card:focus-visible .goto svg { translate: 3px 0; }
+
+footer { max-width: 900px; margin: clamp(40px,6vw,64px) auto 0; padding: 20px 20px 0; border-top: 1px solid var(--line); color: var(--text-3); font-size: 13.5px; }
+footer a { color: var(--text-2); text-decoration: none; }
+footer a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">persieghini</p>
+  <h1>Apps</h1>
+  <p class="lede">Things I've built. Tap one for the app itself, or just its privacy policy.</p>
+
+  <ul class="grid">
+    <li>
+      <a class="card" style="--c:#6FA97E" href="faunafolio/">
+        <div class="card__top">
+          <img class="card__icon" src="assets/icons/faunafolio.webp" alt="" width="56" height="56">
+          <div class="card__heading">
+            <p class="card__name">FaunaFolio</p>
+            <p class="card__tagline">Wildlife &amp; pet journal — snap an animal and it identifies itself.</p>
+          </div>
+        </div>
+        <div class="card__foot">
+          <span class="pill pill--live">Site &amp; privacy policy</span>
+          <span class="goto">Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a class="card" style="--c:#A374E8" href="heirmos/">
+        <div class="card__top">
+          <img class="card__icon" src="assets/icons/heirmos.webp" alt="" width="56" height="56">
+          <div class="card__heading">
+            <p class="card__name">Heirmos</p>
+            <p class="card__tagline">Private, local-first cycle tracking, built for two.</p>
+          </div>
+        </div>
+        <div class="card__foot">
+          <span class="pill">Privacy policy</span>
+          <span class="goto">Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a class="card" style="--c:#45BFC9" href="magnetify/">
+        <div class="card__top">
+          <img class="card__icon" src="assets/icons/magnetify.webp" alt="" width="56" height="56">
+          <div class="card__heading">
+            <p class="card__name">Magnetify</p>
+            <p class="card__tagline">Turns travel photos into magnets on a 3D fridge you can spin around.</p>
+          </div>
+        </div>
+        <div class="card__foot">
+          <span class="pill">Privacy policy</span>
+          <span class="goto">Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a class="card" style="--c:#F2994A" href="pennywatt/">
+        <div class="card__top">
+          <img class="card__icon" src="assets/icons/pennywatt.webp" alt="" width="56" height="56">
+          <div class="card__heading">
+            <p class="card__name">PennyWatt</p>
+            <p class="card__tagline">Times high-wattage appliances to the cheapest electricity window.</p>
+          </div>
+        </div>
+        <div class="card__foot">
+          <span class="pill">Privacy policy</span>
+          <span class="goto">Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+    </li>
+  </ul>
+
+  <footer>
+    <a href="https://github.com/persieghini">github.com/persieghini</a>
+  </footer>
+</main>
+</body>
+</html>
