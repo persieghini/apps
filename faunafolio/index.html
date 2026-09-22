@@ -640,12 +640,80 @@ a.store--google:hover { background: var(--accent-soft); transform: translateY(-1
 /* ---------- closing + footer ---------- */
 .closing { text-align: center; }
 .closing .wrap { display: grid; justify-items: center; gap: 22px; }
-.closing__lion { width: 170px; height: 170px; }
+.closing .lede { margin-top: -6px; }
+
+/* Achievement badges: the app's real achievements and icons. Earned ones
+   go gold; the rest show a progress ring, same as the Stats page. */
+.badges {
+  list-style: none; margin: 0 0 8px; padding: 0;
+  width: min(780px, 100%);
+  display: grid; grid-template-columns: repeat(6, minmax(0, 1fr));
+  column-gap: clamp(10px, 2.2vw, 24px); row-gap: 8px;
+}
+/* Each badge spans three shared rows (ring / name / progress), so when one
+   name wraps to two lines every badge's progress line still sits on the
+   same baseline instead of that one dropping lower than its neighbours. */
+.badge {
+  display: grid; grid-row: span 3; grid-template-rows: subgrid;
+  justify-items: center; align-items: start; min-width: 0; text-align: center;
+}
+.badge b { text-wrap: balance; }
+.badge__ring {
+  --ring-c: var(--accent);
+  position: relative;
+  width: clamp(62px, 9vw, 86px); aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: conic-gradient(var(--ring-c) calc(var(--p) * 1turn), var(--line-2) 0);
+}
+.badge__ring::before {
+  content: ""; position: absolute; inset: 4px; border-radius: 50%;
+  background: var(--surface);
+}
+.badge__icon {
+  position: relative; width: 48%; aspect-ratio: 1;
+  background: var(--text-3);
+  -webkit-mask: var(--i) center / contain no-repeat;
+  mask: var(--i) center / contain no-repeat;
+}
+.badge.is-earned .badge__ring { --ring-c: var(--gold); box-shadow: 0 0 26px -8px color-mix(in srgb, var(--gold) 60%, transparent); }
+.badge.is-earned .badge__ring::before { background: color-mix(in srgb, var(--gold) 14%, var(--surface)); }
+.badge.is-earned .badge__icon { background: var(--gold-text); }
+.badge b { font-size: 13.5px; font-weight: 700; line-height: 1.25; }
+.badge small { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--text-3); font-variant-numeric: tabular-nums; }
+.badge.is-earned small { color: var(--gold-text); }
+@media (max-width: 560px) { .badges { grid-template-columns: repeat(3, minmax(0, 1fr)); } .badge small { margin-bottom: 14px; } }
 .footer { border-top: 1px solid var(--line); padding-block: 36px calc(36px + env(safe-area-inset-bottom, 0px)); }
 .footer .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; color: var(--text-3); font-size: 14.5px; }
 .footer nav { display: flex; flex-wrap: wrap; gap: 8px 24px; }
 .footer a { color: var(--text-2); text-decoration: none; overflow-wrap: anywhere; }
 .footer a:hover { color: var(--text); }
+
+/* ---------- the little things (scrolling band) ---------- */
+.marquee {
+  display: flex; gap: 12px; overflow: hidden;
+  margin-top: clamp(26px, 4vw, 38px);
+  -webkit-mask: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.marquee__track {
+  list-style: none; margin: 0; padding: 4px 0;
+  flex: none; min-width: 100%;
+  display: flex; justify-content: space-around; gap: 12px;
+  animation: marquee 52s linear infinite;
+}
+.marquee:hover .marquee__track, .marquee:focus-within .marquee__track { animation-play-state: paused; }
+@keyframes marquee { to { transform: translateX(calc(-100% - 12px)); } }
+.marquee li {
+  flex: none; display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 18px; border-radius: 999px;
+  background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2);
+  font-size: 15.5px; white-space: nowrap;
+}
+.marquee li::before {
+  content: ""; width: 11px; height: 7px; flex: none;
+  border-radius: 0 60% 0 60%; background: var(--p-main); rotate: -28deg;
+}
 
 /* ---------- comic style (the app's optional skin) ---------- */
 :root[data-comic="on"] h2 { text-shadow: 3px 3px 0 var(--accent-soft); }
@@ -666,6 +734,8 @@ a.store--google:hover { background: var(--accent-soft); transform: translateY(-1
 :root[data-comic="on"] .themer { box-shadow: 0 0 0 2.5px var(--ink-line), 6px 6px 0 0 var(--ink-line); }
 :root[data-comic="on"] .store,
 :root[data-comic="on"] .btn { box-shadow: 0 0 0 2px var(--ink-line), 3px 3px 0 0 var(--ink-line); }
+:root[data-comic="on"] .marquee li { box-shadow: 0 0 0 2px var(--ink-line), 3px 3px 0 0 var(--ink-line); }
+:root[data-comic="on"] .badge__ring { box-shadow: 0 0 0 2.5px var(--ink-line), 4px 4px 0 0 var(--ink-line); }
 :root[data-comic="on"] .reveal__grid video { box-shadow: 0 0 0 3px var(--ink-line), 5px 5px 0 0 var(--ink-line); }
 @media (max-width: 900px) { :root[data-comic="on"] .price__col + .price__col { border-left: 0; border-top: 3px solid var(--ink-line); } }
 
@@ -679,6 +749,10 @@ a.store--google:hover { background: var(--accent-soft); transform: translateY(-1
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   body, .spot__icon img, .spot__word, .store, .faq__list summary::after, .switch, .switch::after { transition: none; }
+  .marquee { -webkit-mask: none; mask: none; padding-inline: var(--gutter); }
+  .marquee__track { animation: none; flex-wrap: wrap; justify-content: center; }
+  .marquee__track[aria-hidden="true"] { display: none; }
+  .marquee li { white-space: normal; }
 }
 </style>
 </head>
@@ -1004,6 +1078,35 @@ a.store--google:hover { background: var(--accent-soft); transform: translateY(-1
   </div>
 </section>
 
+<section class="section section--flush" aria-labelledby="sticks-title">
+  <div class="wrap">
+    <div class="section-head section-head--center">
+      <p class="eyebrow">Why it sticks</p>
+      <h2 id="sticks-title">The little things</h2>
+    </div>
+  </div>
+  <div class="marquee">
+    <ul class="marquee__track">
+      <li>Finds the animals hiding in your camera roll</li>
+      <li>Turns weekends away into trips on its own</li>
+      <li>Voice notes for when your hands are full</li>
+      <li>Your favourite pet, right on your home screen</li>
+      <li>Your friends' pets get their own pages too</li>
+      <li>Smooth, quick, and secretly a game</li>
+      <li>Built by one person who reads every request</li>
+    </ul>
+    <ul class="marquee__track" aria-hidden="true">
+      <li>Finds the animals hiding in your camera roll</li>
+      <li>Turns weekends away into trips on its own</li>
+      <li>Voice notes for when your hands are full</li>
+      <li>Your favourite pet, right on your home screen</li>
+      <li>Your friends' pets get their own pages too</li>
+      <li>Smooth, quick, and secretly a game</li>
+      <li>Built by one person who reads every request</li>
+    </ul>
+  </div>
+</section>
+
 <section class="section band" id="privacy" aria-labelledby="privacy-title">
   <div class="wrap privacy__grid">
     <div class="section-head">
@@ -1110,9 +1213,16 @@ a.store--google:hover { background: var(--accent-soft); transform: translateY(-1
 
 <section class="section section--flush closing" aria-labelledby="closing-title">
   <div class="wrap">
-    <img class="closing__lion" src="assets/anim/icon-lion.webp" alt="" width="240" height="240" loading="lazy">
+    <ul class="badges" aria-label="Six of the thirteen achievements, with example progress">
+      <li class="badge is-earned" style="--p: 1"><span class="badge__ring"><span class="badge__icon" style="--i: url(assets/badges/first_log.png)"></span></span><b>First Entry</b><small>Earned</small></li>
+      <li class="badge is-earned" style="--p: 1"><span class="badge__ring"><span class="badge__icon" style="--i: url(assets/badges/rare_encounter.png)"></span></span><b>Rare Encounter</b><small>Earned</small></li>
+      <li class="badge is-earned" style="--p: 1"><span class="badge__ring"><span class="badge__icon" style="--i: url(assets/badges/forest_explorer.png)"></span></span><b>Forest Explorer</b><small>Earned</small></li>
+      <li class="badge" style="--p: 0.6"><span class="badge__ring"><span class="badge__icon" style="--i: url(assets/badges/world_wanderer.png)"></span></span><b>World Wanderer</b><small>3 / 5 countries</small></li>
+      <li class="badge" style="--p: 0.7"><span class="badge__ring"><span class="badge__icon" style="--i: url(assets/badges/bird_expert.png)"></span></span><b>Bird Expert</b><small>21 / 30 birds</small></li>
+      <li class="badge" style="--p: 0.4"><span class="badge__ring"><span class="badge__icon" style="--i: url(assets/badges/night_explorer.png)"></span></span><b>Night Explorer</b><small>4 / 10 at night</small></li>
+    </ul>
     <h2 id="closing-title">Start your journal today</h2>
-    <p class="lede">Your next sighting is probably closer than you think.</p>
+    <p class="lede">Thirteen achievements to unlock. The first one takes a single photo.</p>
     <div class="store-row" style="justify-content: center;">
       <a class="store store--apple" data-store-link="apple" href="https://testflight.apple.com/join/55yDdDu9">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.6"/><path d="M10.5 18.5h3"/></svg>
