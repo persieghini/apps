@@ -754,6 +754,8 @@ a.store--google:hover { background: var(--accent-soft); transform: translateY(-1
   .marquee__track[aria-hidden="true"] { display: none; }
   .marquee li { white-space: normal; }
 }
+.beta-note { margin: 14px 0 0; font-size: 0.92rem; opacity: 0.85; max-width: 46ch; }
+.beta-note a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 </style>
 </head>
 <body>
@@ -785,7 +787,7 @@ a.store--google:hover { background: var(--accent-soft); transform: translateY(-1
   <canvas class="hero__leaves" aria-hidden="true"></canvas>
   <div class="wrap hero__grid">
     <div class="hero__copy">
-      <p class="eyebrow">Wildlife &amp; pet journal · iPhone and iPad</p>
+      <p class="eyebrow">Wildlife &amp; pet journal · iPhone, iPad and Android beta</p>
       <h1 class="hero__title">
         <span class="sr-only">That stray cat deserves better than your camera roll.</span>
         <span aria-hidden="true">
@@ -825,6 +827,7 @@ a.store--google:hover { background: var(--accent-soft); transform: translateY(-1
           <span><span class="store__small" data-store-small>Coming soon to</span><span class="store__big">Google Play</span></span>
         </span>
       </div>
+      <p class="beta-note">Android is in a closed beta. To get in, <a href="mailto:persieghinidev@gmail.com?subject=FaunaFolio%20Android%20beta%20access&amp;body=Hi%2C%20please%20add%20this%20Google%20account%20to%20the%20FaunaFolio%20Android%20beta%3A%20">email me your Google account address</a> and I'll add you, then open the Google Play link above.</p>
       <ul class="trust" aria-label="Promises">
         <li>No ads</li><li>No account</li><li>No tracking</li><li>Works offline</li>
       </ul>
@@ -1205,7 +1208,7 @@ a.store--google:hover { background: var(--accent-soft); transform: translateY(-1
       </details>
       <details>
         <summary>Is there an Android version?</summary>
-        <p>It's on the way to Google Play. The iPhone and iPad version comes first.</p>
+        <p>Yes — it's in a closed beta on Google Play. <a href="mailto:persieghinidev@gmail.com?subject=FaunaFolio%20Android%20beta%20access&amp;body=Hi%2C%20please%20add%20this%20Google%20account%20to%20the%20FaunaFolio%20Android%20beta%3A%20">Email me your Google account address</a> and I'll add you, then install from the Play Store link.</p>
       </details>
     </div>
   </div>
@@ -1233,6 +1236,7 @@ a.store--google:hover { background: var(--accent-soft); transform: translateY(-1
         <span><span class="store__small" data-store-small>Coming soon to</span><span class="store__big">Google Play</span></span>
       </span>
     </div>
+    <p class="beta-note" style="text-align: center;">Android is in a closed beta. <a href="mailto:persieghinidev@gmail.com?subject=FaunaFolio%20Android%20beta%20access&amp;body=Hi%2C%20please%20add%20this%20Google%20account%20to%20the%20FaunaFolio%20Android%20beta%3A%20">Email me your Google account address</a> to get access.</p>
   </div>
 </section>
 
@@ -1255,7 +1259,7 @@ a.store--google:hover { background: var(--accent-soft); transform: translateY(-1
    ============================================================ */
 var LINKS = {
   appStore: "",    // e.g. "https://apps.apple.com/app/id0000000000"
-  playStore: "",   // e.g. "https://play.google.com/store/apps/details?id=com.persieghini.faunafolio"
+  playStore: "https://play.google.com/store/apps/details?id=com.persieghini.faunafolio",
   testFlight: "https://testflight.apple.com/join/55yDdDu9",
   privacy: "privacy/"
 };
@@ -1274,7 +1278,7 @@ var LINKS = {
       a.href = LINKS.playStore;
       a.innerHTML = el.innerHTML;
       var small = a.querySelector("[data-store-small]");
-      if (small) small.textContent = "Get it on";
+      if (small) small.textContent = "Join the beta on";
       el.replaceWith(a);
     });
   }
