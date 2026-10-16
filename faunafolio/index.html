@@ -605,6 +605,21 @@ a.store--google:hover { background: var(--accent-soft); transform: translateY(-1
 @media (max-width: 1000px) { .extras { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .extras { grid-template-columns: 1fr; } .extras li { padding: 22px 20px 24px; } }
 
+/* ---------- roadmap ---------- */
+.roadmap { margin: clamp(32px, 5vw, 52px) 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: 0 0 0 1px var(--line); }
+.roadmap__col { padding: 26px 24px 28px; background: var(--bg); }
+.roadmap__col h3 { display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); }
+.roadmap__col--now h3 { color: var(--accent); }
+.roadmap ul { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 14px; }
+.roadmap li { position: relative; padding-left: 26px; font-size: 15px; line-height: 1.5; color: var(--text-2); }
+.roadmap li b { display: block; color: var(--text); font-weight: 650; }
+.roadmap li::before { content: ""; position: absolute; left: 0; top: 4px; width: 14px; height: 14px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--line-2); }
+.roadmap__col--done li::before { background: var(--accent-soft); box-shadow: inset 0 0 0 1.5px var(--accent); }
+.roadmap__col--done li::after { content: ""; position: absolute; left: 4px; top: 7px; width: 6px; height: 3px; border-left: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(-45deg); }
+.roadmap__col--now li::before { box-shadow: inset 0 0 0 1.5px var(--accent); background: radial-gradient(circle, var(--accent) 0 3px, transparent 3.5px); }
+.roadmap__note { margin-top: 16px; font-size: 13.5px; color: var(--text-3); }
+@media (max-width: 900px) { .roadmap { grid-template-columns: 1fr; } .roadmap__col { padding: 22px 20px 24px; } }
+
 /* ---------- pricing ---------- */
 .price {
   display: grid;
@@ -771,6 +786,7 @@ a.store--google:hover { background: var(--accent-soft); transform: translateY(-1
       <a href="#yours">Themes</a>
       <a href="#privacy">Privacy</a>
       <a href="#pricing">Pricing</a>
+      <a href="#roadmap">Roadmap</a>
       <a href="#faq">FAQ</a>
     </nav>
     <button class="mode-btn" type="button" id="mode-toggle" aria-label="Switch to light mode">
@@ -1184,6 +1200,45 @@ a.store--google:hover { background: var(--accent-soft); transform: translateY(-1
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="section section--flush" id="roadmap" aria-labelledby="roadmap-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Roadmap</p>
+      <h2 id="roadmap-title">What's done, what's next</h2>
+      <p>Built by one person, shaped by what you ask for. No dates on purpose: things ship when they're good.</p>
+    </div>
+    <div class="roadmap">
+      <div class="roadmap__col roadmap__col--done">
+        <h3>Shipped</h3>
+        <ul>
+          <li><b>Snap, name, collect</b>On-device species ID, rarity, XP and thirteen achievements.</li>
+          <li><b>Map, trips and pets</b>Every sighting pinned, weekends grouped into trips, pets with their own pages.</li>
+          <li><b>Smart Import and Immich</b>Finds the animals already in your camera roll or photo server.</li>
+          <li><b>Nearly 3,000 species</b>Including every animal on London Zoo's list.</li>
+          <li><b>Widgets, themes, nine languages</b>Plus App Lock and encrypted backups.</li>
+        </ul>
+      </div>
+      <div class="roadmap__col roadmap__col--now">
+        <h3>Next up</h3>
+        <ul>
+          <li><b>Smarter species ID</b>A new recognition model that tells look-alikes apart: Bactrian from dromedary camels, alpacas from llamas, one macaw from another. Still runs entirely on your phone. An optional one-time download.</li>
+          <li><b>Dog and cat breeds</b>A breed suggestion for pets, when it's sure enough to be useful.</li>
+          <li><b>Google Play</b>Android leaves the closed beta.</li>
+        </ul>
+      </div>
+      <div class="roadmap__col">
+        <h3>Later</h3>
+        <ul>
+          <li><b>Even sharper on tricky groups</b>Gulls, deer, penguins and butterflies, trained only on openly licensed photos.</li>
+          <li><b>World catalog</b>An optional, search-only list of every known bird and mammal.</li>
+          <li><b>More zoo lists</b>Tell me which zoo you visit most.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="roadmap__note">Have an idea? <a href="mailto:persieghinidev@gmail.com?subject=FaunaFolio%20idea">Send it over</a>, I read every one.</p>
   </div>
 </section>
 
