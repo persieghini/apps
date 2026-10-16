@@ -176,7 +176,12 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  /* Section links land below the sticky header (64px row + breathing room), not under it. */
+  scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 84px);
+}
 body {
   margin: 0;
   background: var(--bg);
@@ -250,7 +255,29 @@ p { margin: 0; }
 .mode-btn .i-sun { display: none; }
 .is-dark .mode-btn .i-sun { display: block; }
 .is-dark .mode-btn .i-moon { display: none; }
-@media (max-width: 820px) { .top__nav { display: none; } }
+/* Mobile section menu: the desktop nav collapses into this button + drop-down panel. */
+.menu-btn { display: none; }
+.menu-btn .i-close { display: none; }
+.top.is-open .menu-btn .i-open { display: none; }
+.top.is-open .menu-btn .i-close { display: block; }
+.top__menu { display: none; }
+@media (max-width: 820px) {
+  .top__nav { display: none; }
+  .menu-btn { display: grid; }
+  .top.is-open .top__menu {
+    display: grid;
+    padding: 6px var(--gutter) 14px;
+    border-top: 1px solid var(--line);
+  }
+  .top__menu a {
+    padding: 13px 4px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 17px;
+    border-bottom: 1px solid var(--line);
+  }
+  .top__menu a:last-child { border-bottom: 0; }
+}
 @media (max-width: 400px) { .top__row .btn { display: none; } }
 
 /* ---------- buttons ---------- */
@@ -789,12 +816,24 @@ a.store--google:hover { background: var(--accent-soft); transform: translateY(-1
       <a href="#roadmap">Roadmap</a>
       <a href="#faq">FAQ</a>
     </nav>
+    <button class="mode-btn menu-btn" type="button" id="menu-toggle" aria-label="Sections" aria-expanded="false" aria-controls="top-menu">
+      <svg class="i-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      <svg class="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
     <button class="mode-btn" type="button" id="mode-toggle" aria-label="Switch to light mode">
       <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
       <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 14.6A8.4 8.4 0 0 1 9.4 3.8a8.4 8.4 0 1 0 10.8 10.8z"/></svg>
     </button>
     <a class="btn" data-store-link="apple" href="https://testflight.apple.com/join/55yDdDu9">Get the app</a>
   </div>
+  <nav class="top__menu" id="top-menu" aria-label="Sections">
+    <a href="#features">Features</a>
+    <a href="#yours">Themes</a>
+    <a href="#privacy">Privacy</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#faq">FAQ</a>
+  </nav>
 </header>
 
 <main>
@@ -1350,6 +1389,24 @@ var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
 (function themes() {
   var root = document.documentElement;
   var lightMQ = window.matchMedia("(prefers-color-scheme: light)");
+  // Mobile section menu: toggle, and close on a link tap, Escape, a tap outside, or widening.
+  (function () {
+    var header = document.querySelector(".top");
+    var btn = document.getElementById("menu-toggle");
+    if (!header || !btn) return;
+    function setOpen(open) {
+      header.classList.toggle("is-open", open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+    btn.addEventListener("click", function () { setOpen(!header.classList.contains("is-open")); });
+    document.querySelectorAll("#top-menu a").forEach(function (a) {
+      a.addEventListener("click", function () { setOpen(false); });
+    });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") setOpen(false); });
+    document.addEventListener("click", function (e) { if (!header.contains(e.target)) setOpen(false); });
+    window.matchMedia("(min-width: 821px)").addEventListener("change", function (m) { if (m.matches) setOpen(false); });
+  })();
+
   var modeBtn = document.getElementById("mode-toggle");
   var comicBtn = document.getElementById("comic-toggle");
   var metaTheme = document.querySelector('meta[name="theme-color"]');
