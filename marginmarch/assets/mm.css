@@ -63,6 +63,23 @@ img { max-width: 100%; }
 .top nav a { font-family: var(--label); font-size: 14px; color: var(--text-2); text-decoration: none; letter-spacing: .04em; }
 .top nav a:hover { color: var(--gold-hi); }
 
+/* hamburger (phones only) */
+.menu-btn { display: none; margin-left: auto; width: 44px; height: 40px; padding: 0; cursor: pointer; background: var(--panel-2); border: 0; box-shadow: 0 0 0 3px #000, inset 0 0 0 2px var(--brick-hi); position: relative; }
+.menu-btn span, .menu-btn span::before, .menu-btn span::after { position: absolute; left: 11px; width: 22px; height: 3px; background: var(--gold-hi); content: ""; transition: transform .15s, opacity .15s; }
+.menu-btn span { top: 18px; }
+.menu-btn span::before { left: 0; top: -7px; }
+.menu-btn span::after { left: 0; top: 7px; }
+.menu-btn[aria-expanded="true"] span { background: transparent; }
+.menu-btn[aria-expanded="true"] span::before { transform: translateY(7px) rotate(45deg); }
+.menu-btn[aria-expanded="true"] span::after { transform: translateY(-7px) rotate(-45deg); }
+@media (max-width: 720px) {
+  .has-menu .menu-btn { display: block; }
+  .has-menu nav { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; gap: 0; margin: 0; padding: 6px 20px 14px; background: var(--bg); border-bottom: 3px solid var(--brick); }
+  .has-menu nav.open { display: flex; }
+  .has-menu nav a { padding: 14px 0; font-size: 16px; border-bottom: 2px dashed var(--brick); }
+  .has-menu nav a:last-child { border-bottom: 0; }
+}
+
 /* ---------- pixel button ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none;

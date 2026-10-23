@@ -19,9 +19,10 @@
 </head>
 <body>
 <header class="top">
-  <div class="wrap top__row">
+  <div class="wrap top__row has-menu">
     <a class="brand" href="./"><img class="pixel-art-icon" src="assets/icon.png" alt="" width="32" height="32">Margin March</a>
-    <nav aria-label="Primary">
+    <button class="menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-nav"><span></span></button>
+    <nav id="site-nav" aria-label="Primary">
       <a href="#overview">Overview</a>
       <a href="#features">Features</a>
       <a href="#screens">Screens</a>
@@ -188,6 +189,13 @@
 <script>
 /* EDIT HERE when the Steam page is live: paste the full store URL. */
 var STEAM_URL = ""; // e.g. "https://store.steampowered.com/app/0000000/Margin_March/"
+(function () {
+  var b = document.querySelector(".menu-btn"), n = document.getElementById("site-nav");
+  function set(o) { n.classList.toggle("open", o); b.setAttribute("aria-expanded", o); }
+  b.addEventListener("click", function () { set(!n.classList.contains("open")); });
+  n.addEventListener("click", function (e) { if (e.target.closest("a")) set(false); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") set(false); });
+})();
 if (STEAM_URL) {
   document.querySelectorAll("#steam-btn, [data-steam]").forEach(function (a) { a.href = STEAM_URL; });
 }
