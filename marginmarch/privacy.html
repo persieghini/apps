@@ -36,22 +36,22 @@
   <p>Your progress and settings are stored only on your own PC, in <code class="code">%LOCALAPPDATA%\MarginMarch\Saved\</code>. Nothing in that folder is uploaded by the game. If you uninstall the game and delete that folder, all of your data is permanently removed.</p>
 
   <h2>Windows startup registry entry</h2>
-  <p>If you turn on &ldquo;Start with Windows&rdquo;, the game adds a <code class="code">Run</code> key entry to the registry of the current Windows user only. Turning the setting off removes that entry. If you never enable it, no entry is created.</p>
+  <p>&ldquo;Start with Windows&rdquo; is off by default. If you turn it on, the game adds a <code class="code">Run</code> key entry to the registry of the current Windows user only. Turning the setting off removes that entry. If you never enable it, no entry is created.</p>
 
   <h2>Optional global hotkeys</h2>
-  <p>If you configure global hotkeys, the game listens locally for those specific shortcuts so it can show, hide or snooze from any app. No keystrokes are recorded, stored or transmitted.</p>
+  <p>If you configure global hotkeys, the game listens only for its own key combinations so it can show, hide or snooze from any app. No keystrokes are logged or sent anywhere.</p>
 
   <h2>Fullscreen auto-hide</h2>
-  <p>To step aside when a fullscreen app is running, the game checks locally whether a window covers the screen, using screen bounding boxes. It never reads or captures window titles, URLs or screen content.</p>
+  <p>To step aside when a fullscreen app is running, the game checks whether the foreground window covers the monitor. Window titles and contents are not read, stored or transmitted.</p>
 
   <h2>Discord Rich Presence (optional)</h2>
-  <p>If enabled, the game sends short status text, for example &ldquo;Fighting Magma Golem (Act 3)&rdquo;, only to the Discord app running on your PC, through its local IPC socket. What Discord does with it is governed by <a href="https://discord.com/privacy" rel="noopener">Discord's Privacy Policy</a>. You can turn this off in Settings.</p>
+  <p>If Discord is running and this feature is enabled, the game sends status text (for example &ldquo;Fighting the Magma Golem on Taskbar (Act 3)&rdquo;), your level and your current biome to the Discord app on your PC, through Discord's local connection. Discord then shows it on your profile, under <a href="https://discord.com/privacy" rel="noopener">Discord's Privacy Policy</a>. You can turn this off in Settings.</p>
 
   <h2>Twitch chat integration (optional)</h2>
-  <p>If enabled, the game connects anonymously and read-only to public Twitch IRC chat to count vote commands. It does not log in, does not post, and does not log or store chat messages or usernames. Twitch's own handling of that connection is governed by <a href="https://www.twitch.tv/p/legal/privacy-notice/" rel="noopener">Twitch's Privacy Notice</a>.</p>
+  <p>Off by default. If you enable it, the game connects anonymously and read-only to the public chat of the Twitch channel you type in, to count vote commands. It does not log in, does not post, and does not log or store chat messages or usernames. Twitch's own handling of that connection is governed by <a href="https://www.twitch.tv/p/legal/privacy-notice/" rel="noopener">Twitch's Privacy Notice</a>.</p>
 
   <h2>Steam integration</h2>
-  <p>Purchases, Steam Cloud saves and achievements are handled by Valve through Steam, under <a href="https://store.steampowered.com/privacy_agreement/" rel="noopener">Steam's Privacy Policy</a>. We do not receive that data.</p>
+  <p>When the game is released on Steam, purchases, achievements, Steam Cloud saves and Workshop content are handled by Valve through Steam, under <a href="https://store.steampowered.com/privacy_agreement/" rel="noopener">Steam's Privacy Policy</a>. We do not receive that data.</p>
 
   <h2>Children's privacy</h2>
   <p>Margin March is not directed at children under 13, and we do not knowingly collect personal information from anyone.</p>
