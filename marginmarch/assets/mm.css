@@ -121,7 +121,7 @@ section { scroll-margin-top: 80px; }
 .hero__cta { display: flex; flex-wrap: wrap; gap: 18px 20px; margin-top: 32px; }
 .hero__icon { justify-self: center; position: relative; }
 .hero__icon img {
-  width: 100%; max-width: 260px; display: block;
+  width: 100%; max-width: 260px; height: auto; aspect-ratio: 1; object-fit: contain; display: block;
   box-shadow: 0 0 0 4px #000, 0 0 0 8px var(--brick-hi), 0 0 60px rgba(179,107,255,.5);
   animation: bob 3.2s steps(4) infinite;
 }
@@ -129,7 +129,7 @@ section { scroll-margin-top: 80px; }
 .hero__banner { margin-top: clamp(36px, 6vw, 64px); }
 .hero__banner img { display: block; width: 100%; height: auto; }
 .status { display: inline-block; font-family: var(--label); font-size: 13px; letter-spacing: .1em; padding: 5px 10px; margin-top: 22px; color: var(--cyan); background: rgba(77,227,255,.08); box-shadow: inset 0 0 0 2px rgba(77,227,255,.4); }
-@media (max-width: 760px) { .hero__grid { grid-template-columns: 1fr; } .hero__icon { order: -1; width: 160px; justify-self: start; } }
+@media (max-width: 760px) { .hero__grid { grid-template-columns: 1fr; } .hero__icon { order: -1; width: 150px; justify-self: start; margin: 8px 0 0 8px; } }
 
 /* ---------- grids ---------- */
 .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-top: 26px; }
