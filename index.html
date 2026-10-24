@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Apps — persieghini</title>
-<meta name="description" content="Apps built by persieghini: FaunaFolio, Heirmos, Magnetify, PennyWatt and Margin March — with links to each one's privacy policy.">
+<title>Apps &amp; Games — persieghini</title>
+<meta name="description" content="Apps (FaunaFolio, Heirmos, Magnetify, PennyWatt) and games (Margin March, Dungeon Helpdesk) by persieghini, with links to each one's privacy policy.">
 <meta name="theme-color" content="#0A0A0D">
 <meta name="color-scheme" content="dark">
 <link rel="icon" href="data:,">
@@ -48,6 +48,11 @@ h1 {
 }
 .lede { color: var(--text-2); font-size: 17px; max-width: 46em; margin: 0; }
 
+.section-title {
+  font-family: var(--mono); font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--text-3); font-weight: 400; margin: clamp(36px,6vw,56px) 0 0;
+}
+.section-title + .grid { margin-top: 16px; }
 .grid {
   list-style: none; margin: clamp(36px,6vw,56px) 0 0; padding: 0;
   display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px;
@@ -111,9 +116,10 @@ footer a:hover { color: var(--text); }
 <body>
 <main>
   <p class="eyebrow">persieghini</p>
-  <h1>Apps</h1>
-  <p class="lede">Things I've built. Tap one for the app itself, or just its privacy policy.</p>
+  <h1>Apps &amp; Games</h1>
+  <p class="lede">Things I've built: apps and games. Tap one for the thing itself, or just its privacy policy.</p>
 
+  <h2 class="section-title">Apps</h2>
   <ul class="grid">
     <li>
       <a class="card" style="--c:#6FA97E" href="faunafolio/">
@@ -175,13 +181,32 @@ footer a:hover { color: var(--text); }
         </div>
       </a>
     </li>
+  </ul>
+
+  <h2 class="section-title">Games</h2>
+  <ul class="grid grid--games">
     <li>
       <a class="card" style="--c:#B36BFF" href="marginmarch/">
         <div class="card__top">
-          <img class="card__icon" style="image-rendering:pixelated" src="assets/icons/marginmarch.webp" alt="" width="56" height="56">
+          <img class="card__icon" src="assets/icons/marginmarch.webp" alt="" width="56" height="56">
           <div class="card__heading">
             <p class="card__name">Margin March</p>
             <p class="card__tagline">An idle adventure that lives on your taskbar.</p>
+          </div>
+        </div>
+        <div class="card__foot">
+          <span class="pill pill--live">Site, privacy &amp; terms</span>
+          <span class="goto">Open<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a class="card" style="--c:#F2A93B" href="dungeonhelpdesk/">
+        <div class="card__top">
+          <img class="card__icon" src="assets/icons/dungeonhelpdesk.webp" alt="" width="56" height="56">
+          <div class="card__heading">
+            <p class="card__name">Dungeon Helpdesk</p>
+            <p class="card__tagline">Where adventurers complain, and you manage the chaos.</p>
           </div>
         </div>
         <div class="card__foot">
