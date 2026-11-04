@@ -1187,7 +1187,7 @@ a.store--google:hover { background: var(--accent-soft); transform: translateY(-1
         <li>Backups are one encrypted file, protected by your password</li>
         <li>Crash logs stay on your phone unless you choose to share one</li>
       </ul>
-      <a class="tag__link" data-link="privacy" href="https://persieghini.github.io/privacy-policies/faunafolio/">Read the full privacy policy →</a>
+      <a class="tag__link" data-link="privacy" href="privacy/">Read the full privacy policy →</a>
     </div>
   </div>
 </section>
@@ -1345,7 +1345,8 @@ a.store--google:hover { background: var(--accent-soft); transform: translateY(-1
   <div class="wrap">
     <p>© 2026 FaunaFolio</p>
     <nav aria-label="Footer">
-      <a data-link="privacy" href="https://persieghini.github.io/privacy-policies/faunafolio/">Privacy policy</a>
+      <a data-link="privacy" href="privacy/">Privacy policy</a>
+      <a data-link="terms" href="terms/">Terms of service</a>
       <a href="mailto:persieghinidev@gmail.com">Support: persieghinidev@gmail.com</a>
     </nav>
   </div>
@@ -1360,7 +1361,8 @@ var LINKS = {
   appStore: "",    // e.g. "https://apps.apple.com/app/id0000000000"
   playStore: "https://play.google.com/store/apps/details?id=com.persieghini.faunafolio",
   testFlight: "https://testflight.apple.com/join/55yDdDu9",
-  privacy: "privacy/"
+  privacy: "privacy/",
+  terms: "terms/"
 };
 
 (function applyLinks() {
@@ -1382,6 +1384,7 @@ var LINKS = {
     });
   }
   document.querySelectorAll('[data-link="privacy"]').forEach(function (el) { el.href = LINKS.privacy; });
+  document.querySelectorAll('[data-link="terms"]').forEach(function (el) { el.href = LINKS.terms; });
 })();
 
 var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

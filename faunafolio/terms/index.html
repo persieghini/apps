@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Terms of Service — FaunaFolio</title>
+<script>
+(function () {
+  try {
+    var r = document.documentElement;
+    var s = localStorage.getItem("ff-scheme"), p = localStorage.getItem("ff-palette"), c = localStorage.getItem("ff-comic");
+    if (s) r.setAttribute("data-scheme", s);
+    if (p) r.setAttribute("data-palette", p);
+    if (c) r.setAttribute("data-comic", c);
+  } catch (e) {}
+})();
+</script>
+<meta name="description" content="FaunaFolio's terms of service in plain language: your licence to use the app, how Pro works, what species suggestions can and can't be trusted for, and how to treat wildlife responsibly.">
+<meta name="theme-color" content="#0D1B13">
+<meta name="color-scheme" content="dark light">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+<link rel="preload" href="../assets/fonts/Bangers-Regular.ttf" as="font" type="font/ttf" crossorigin>
+<style>
+@font-face {
+  font-family: "Bangers";
+  src: url("../assets/fonts/Bangers-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+:root {
+  --p-main: #6FA97E; --p-mid: #4C7A5A; --p-deep: #1E3D2B;
+  --gold: #D9A441; --gold-hi: #E8B95A; --gold-ink: #1C1405;
+
+  color-scheme: dark;
+  --bg: color-mix(in srgb, var(--p-deep) 38%, #030604);
+  --bg-2: color-mix(in srgb, var(--p-deep) 55%, #030604);
+  --surface: color-mix(in srgb, var(--p-deep) 62%, #040705);
+  --line: color-mix(in srgb, var(--p-main) 17%, transparent);
+  --line-2: color-mix(in srgb, var(--p-main) 30%, transparent);
+  --text: #F2EBD3;
+  --text-2: color-mix(in srgb, var(--p-main) 28%, #DDD9CC);
+  --text-3: color-mix(in srgb, var(--p-main) 40%, #9EA39B);
+  --accent: color-mix(in srgb, var(--p-main) 85%, #FFFFFF);
+  --accent-soft: color-mix(in srgb, var(--p-main) 22%, transparent);
+  --header-bg: color-mix(in srgb, var(--bg) 80%, transparent);
+  --row-alt: color-mix(in srgb, var(--p-main) 6%, transparent);
+
+  --display: "Bangers", "Impact", "Haettenschweiler", "Arial Narrow Bold", sans-serif;
+  --body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+}
+:root[data-palette="river"]    { --p-main: #64A0BE; --p-mid: #39708C; --p-deep: #16384A; }
+:root[data-palette="dusk"]     { --p-main: #9B86C8; --p-mid: #63519A; --p-deep: #32284E; }
+:root[data-palette="ember"]    { --p-main: #D08B5B; --p-mid: #9C5A2E; --p-deep: #4A2A18; }
+:root[data-palette="meadow"]   { --p-main: #A9C24A; --p-mid: #6E8A2E; --p-deep: #33421A; }
+:root[data-palette="coral"]    { --p-main: #E0837E; --p-mid: #B85C57; --p-deep: #4A2020; }
+:root[data-palette="midnight"] { --p-main: #6E7FD1; --p-mid: #454F9E; --p-deep: #1B1E42; }
+:root[data-palette="lagoon"]   { --p-main: #4FBDB0; --p-mid: #2E8A80; --p-deep: #0F3B38; }
+:root[data-palette="blossom"]  { --p-main: #E896B8; --p-mid: #C2597E; --p-deep: #4A1F32; }
+:root[data-palette="sand"]     { --p-main: #B0A99C; --p-mid: #7A7266; --p-deep: #2B2620; }
+:root[data-palette="plum"]     { --p-main: #A66FB5; --p-mid: #7A4488; --p-deep: #34163D; }
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]):not([data-scheme]) {
+    color-scheme: light;
+    --bg: color-mix(in srgb, var(--p-main) 7%, #FBF8F1);
+    --bg-2: color-mix(in srgb, var(--p-main) 13%, #F6F2E7);
+    --surface: color-mix(in srgb, var(--p-main) 5%, #FFFDF8);
+    --line: color-mix(in srgb, var(--p-deep) 15%, transparent);
+    --line-2: color-mix(in srgb, var(--p-deep) 28%, transparent);
+    --text: color-mix(in srgb, var(--p-deep) 55%, #0B0F0C);
+    --text-2: color-mix(in srgb, var(--p-deep) 45%, #454B46);
+    --text-3: color-mix(in srgb, var(--p-deep) 35%, #6A706A);
+    --accent: color-mix(in srgb, var(--p-mid) 78%, #000000);
+    --accent-soft: color-mix(in srgb, var(--p-main) 26%, transparent);
+    --header-bg: color-mix(in srgb, var(--bg) 84%, transparent);
+    --row-alt: color-mix(in srgb, var(--p-deep) 4%, transparent);
+  }
+}
+:root[data-theme="light"]:not([data-scheme]), :root[data-scheme="light"] {
+  color-scheme: light;
+  --bg: color-mix(in srgb, var(--p-main) 7%, #FBF8F1);
+  --bg-2: color-mix(in srgb, var(--p-main) 13%, #F6F2E7);
+  --surface: color-mix(in srgb, var(--p-main) 5%, #FFFDF8);
+  --line: color-mix(in srgb, var(--p-deep) 15%, transparent);
+  --line-2: color-mix(in srgb, var(--p-deep) 28%, transparent);
+  --text: color-mix(in srgb, var(--p-deep) 55%, #0B0F0C);
+  --text-2: color-mix(in srgb, var(--p-deep) 45%, #454B46);
+  --text-3: color-mix(in srgb, var(--p-deep) 35%, #6A706A);
+  --accent: color-mix(in srgb, var(--p-mid) 78%, #000000);
+  --accent-soft: color-mix(in srgb, var(--p-main) 26%, transparent);
+  --header-bg: color-mix(in srgb, var(--bg) 84%, transparent);
+  --row-alt: color-mix(in srgb, var(--p-deep) 4%, transparent);
+}
+:root[data-scheme="dark"], :root[data-scheme="amoled"] { color-scheme: dark; }
+:root[data-scheme="dark"], :root[data-scheme="amoled"] { color-scheme: dark; }
+:root[data-scheme="amoled"] { --bg: #000; --bg-2: #000; --surface: #070707; --header-bg: rgba(0,0,0,.82); }
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 17px/1.7 var(--body); -webkit-font-smoothing: antialiased;
+  transition: background-color .3s, color .3s;
+}
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  background: var(--header-bg); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.top__row { max-width: 760px; margin-inline: auto; padding: 14px 20px; display: flex; align-items: center; gap: 12px; }
+.back { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text-2); font-size: 15px; }
+.back:hover { color: var(--text); }
+.back svg { width: 18px; height: 18px; }
+.top__row span.brand { margin-left: auto; font-family: var(--display); font-size: 20px; letter-spacing: .02em; color: var(--text-3); }
+
+main { max-width: 760px; margin-inline: auto; padding: clamp(28px,5vw,56px) 20px calc(80px + env(safe-area-inset-bottom, 0px)); }
+h1 {
+  font-family: var(--display); font-weight: 400; margin: 0 0 6px;
+  font-size: clamp(34px, 5vw, 52px); letter-spacing: .02em; line-height: 1;
+}
+.updated { font-family: var(--mono); font-size: 12.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); margin: 0 0 40px; }
+h2 {
+  font-family: var(--display); font-weight: 400; font-size: clamp(22px, 3vw, 28px);
+  letter-spacing: .02em; margin: 48px 0 14px; padding-top: 20px; border-top: 1px solid var(--line);
+}
+h2:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
+p { color: var(--text-2); margin: 0 0 16px; max-width: 62ch; }
+strong { color: var(--text); }
+code {
+  font-family: var(--mono); font-size: .9em; background: var(--accent-soft);
+  padding: .1em .35em; border-radius: 5px; color: var(--text);
+}
+ul, ol { color: var(--text-2); padding-left: 22px; margin: 0 0 16px; display: grid; gap: 10px; max-width: 64ch; }
+li::marker { color: var(--accent); }
+.tbl-wrap { overflow-x: auto; margin: 0 0 20px; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--line); }
+table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 15px; }
+th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); font-weight: 600; }
+tbody tr:nth-child(odd) { background: var(--row-alt); }
+tbody tr:last-child td { border-bottom: 0; }
+td:first-child { white-space: nowrap; font-weight: 600; color: var(--text); }
+
+.closing {
+  margin-top: 56px; padding: 22px clamp(18px,4vw,28px); border-radius: 16px;
+  background: var(--surface); box-shadow: inset 0 0 0 1px var(--line);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px;
+}
+.closing p { margin: 0; max-width: none; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px;
+  border-radius: 999px; background: var(--gold); color: var(--gold-ink);
+  font-weight: 700; font-size: 15px; text-decoration: none; white-space: nowrap;
+}
+.btn:hover { background: var(--gold-hi); }
+
+.tldr {
+  margin: 0 0 36px; padding: 20px clamp(18px,4vw,26px); border-radius: 16px;
+  background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2);
+}
+.tldr h2 { margin: 0 0 10px; padding: 0; border: 0; font-size: 22px; }
+.tldr ul { margin: 0; }
+.toc { margin: 0 0 8px; }
+.toc ol { columns: 2; column-gap: 32px; display: block; max-width: none; padding-left: 24px; margin: 0; }
+.toc li { break-inside: avoid; margin-bottom: 6px; }
+.toc a { text-decoration: none; }
+.toc a:hover { text-decoration: underline; }
+@media (max-width: 620px) { .toc ol { columns: 1; } }
+h2[id] { scroll-margin-top: 80px; }
+.note {
+  margin: 0 0 16px; padding: 14px 18px; border-radius: 12px; max-width: 64ch;
+  background: var(--accent-soft); color: var(--text); font-size: 16px;
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top__row">
+    <a class="back" href="../"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Back to FaunaFolio</a>
+    <span class="brand">FaunaFolio</span>
+  </div>
+</header>
+<main>
+  <h1>Terms of Service</h1>
+  <p class="updated">Last updated: 5 November 2026</p>
+
+  <p>These terms are the agreement between you and the independent developer of FaunaFolio ("we", "us") for using the FaunaFolio app. They are written to be read. If anything is unclear, <a href="mailto:persieghinidev@gmail.com">ask us</a>.</p>
+
+  <div class="tldr">
+    <h2>The short version</h2>
+    <ul>
+      <li>Your journal lives on your phone. We run no servers and keep no copy, so <strong>back it up</strong>.</li>
+      <li>Species names and other suggestions are <strong>automatic and can be wrong</strong>. Never rely on them for safety, food, medicine or the law.</li>
+      <li>FaunaFolio Pro is a <strong>one-time purchase</strong> through the App Store or Google Play, and refunds go through them.</li>
+      <li>Keep your distance from animals and follow local rules. A sighting is never worth a risk to you or to the wildlife.</li>
+      <li>The app is provided as it is. We are responsible only as far as the law requires.</li>
+    </ul>
+  </div>
+
+  <nav class="toc" aria-label="Contents">
+    <ol>
+      <li><a href="#agreement">Agreeing to these terms</a></li>
+      <li><a href="#licence">Your licence to use the app</a></li>
+      <li><a href="#content">Your journal and your content</a></li>
+      <li><a href="#pro">Free version and FaunaFolio Pro</a></li>
+      <li><a href="#suggestions">Suggestions can be wrong</a></li>
+      <li><a href="#wildlife">Treat wildlife with care</a></li>
+      <li><a href="#use">Using the app properly</a></li>
+      <li><a href="#third">Third-party services</a></li>
+      <li><a href="#changes-app">Updates to the app</a></li>
+      <li><a href="#warranty">No warranty</a></li>
+      <li><a href="#liability">Limit of liability</a></li>
+      <li><a href="#apple">Extra terms for iPhone and iPad</a></li>
+      <li><a href="#ip">Ownership</a></li>
+      <li><a href="#ending">Ending these terms</a></li>
+      <li><a href="#changes-terms">Changes to these terms</a></li>
+      <li><a href="#law">Governing law</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="agreement">1. Agreeing to these terms</h2>
+  <p>By installing or using FaunaFolio you agree to these terms and to our <a href="../privacy/">Privacy Policy</a>. If you don't agree, please don't use the app. If you are under the age at which you can make a contract where you live, use FaunaFolio and buy Pro only with a parent's or guardian's permission.</p>
+
+  <h2 id="licence">2. Your licence to use the app</h2>
+  <p>We give you a personal, non-exclusive, non-transferable licence to install and use FaunaFolio on devices you own or control, for your own use, according to these terms and the rules of the store you got it from.</p>
+  <p>You agree not to copy, sell, rent or sublicense the app, or to take apart, decompile or reverse-engineer it, except where the law lets you do that despite this clause. You also agree not to remove ownership notices or try to get around the Pro purchase check.</p>
+
+  <h2 id="content">3. Your journal and your content</h2>
+  <p>Your entries, photos, notes, voice-note text, locations, pets and trips are <strong>yours</strong>. We don't claim any rights over them, and we never see them: FaunaFolio has no accounts and no servers, so everything is stored on your device.</p>
+  <ul>
+    <li><strong>Back-ups are your job.</strong> Because we hold no copy, we can't recover a journal that is lost with a phone, a deleted app or a reset. Use Profile → Backup &amp; restore regularly.</li>
+    <li><strong>Back-up passwords can't be recovered.</strong> A full backup is encrypted with a password you choose. We never see it and cannot reset it, so keep it somewhere safe.</li>
+    <li><strong>Only import what you may use.</strong> When you import or share photos, including photos someone sent you, you confirm you are allowed to use them. A photo forwarded by a friend can carry their date and location, or none at all. Check before you keep it.</li>
+    <li><strong>What you share is your decision.</strong> Exports, trip packages and screenshots leave the app under your control, and you are responsible for what they contain, including exact locations.</li>
+  </ul>
+
+  <h2 id="pro">4. Free version and FaunaFolio Pro</h2>
+  <p>FaunaFolio is free to download, and every feature works from the start. The free version lets you log a limited number of sightings. <strong>FaunaFolio Pro</strong> removes that limit.</p>
+  <ul>
+    <li><strong>One-time purchase.</strong> Pro is bought once, as an in-app purchase, with no subscription. It belongs to your Apple ID or Google account and can be restored on your other devices with the same account, using "Restore purchases" on the Pro screen.</li>
+    <li><strong>The store handles payment.</strong> Apple or Google processes the payment, shows the price in your currency, and keeps the receipt. We never see your card details or your purchase history.</li>
+    <li><strong>Refunds go through the store.</strong> We can't issue refunds ourselves. Request one from Apple or Google under their refund rules. This doesn't affect any right to cancel or withdraw that the law gives you as a consumer.</li>
+    <li><strong>Free logs and undo.</strong> Logging a sighting counts toward the free limit. Deleting it or undoing a Smart Import doesn't give that count back.</li>
+    <li><strong>Prices and features.</strong> We may change the price of Pro for new buyers. If we add new paid options later, you won't be asked to pay again for what Pro already included when you bought it.</li>
+  </ul>
+
+  <h2 id="suggestions">5. Suggestions can be wrong</h2>
+  <p>FaunaFolio suggests species, breeds, rarity, place names, weather and similar details automatically. Species recognition runs on your device, so it has limits: it can be wrong, vague or confident about the wrong animal, especially with blurry, distant, partial or unusual photos.</p>
+  <div class="note"><strong>Please don't rely on FaunaFolio</strong> to decide whether an animal is dangerous, venomous, protected or edible, whether a plant or animal is safe to touch or eat, how to treat a sick or injured animal, or what to do about a pet's health. For anything that matters, ask a qualified person: a guide, a ranger, a vet or a doctor.</div>
+  <p>"Verified" and "Imported" labels describe where a sighting's <em>location</em> came from (your phone's GPS or the photo's own data), not that the species is confirmed. Dates and places marked "Date unknown" or "trip location" are exactly that, and a photo's date and location can be missing or wrong. Rarity, XP, streaks and achievements are just for fun.</p>
+
+  <h2 id="wildlife">6. Treat wildlife with care</h2>
+  <p>FaunaFolio is about watching animals, not disturbing them. You are responsible for how you behave when you use it.</p>
+  <ul>
+    <li>Keep a safe, respectful distance. Don't chase, corner, feed, touch, call, flash or handle wild animals, and stay away from nests, dens and young.</li>
+    <li>Follow the laws, permits and rules of the places you visit: protected areas, private land, closures, drone and photography rules, and guide instructions.</li>
+    <li>Think before sharing exact locations of rare, endangered, nesting or otherwise sensitive animals. FaunaFolio lets you hide precise coordinates when you export or share. Poachers and crowds can harm what you love.</li>
+    <li>Never put yourself or others at risk to add an entry.</li>
+  </ul>
+
+  <h2 id="use">7. Using the app properly</h2>
+  <ul>
+    <li>Use FaunaFolio lawfully and don't use it to harm, harass or track other people, or to infringe anyone's rights.</li>
+    <li>If you connect your own Immich server, you are responsible for that server, its security and its API key. Only connect libraries you are allowed to access.</li>
+    <li>Don't interfere with the services the app depends on (see below) or try to overload them.</li>
+  </ul>
+
+  <h2 id="third">8. Third-party services</h2>
+  <p>Some features use services we don't run. Their availability and terms are outside our control, and a feature that depends on one may change or stop working.</p>
+  <ul>
+    <li><strong>Map tiles</strong> come from OpenStreetMap, © OpenStreetMap contributors, under its tile usage rules.</li>
+    <li><strong>Weather</strong> is filled in from Open-Meteo using the sighting's coordinate and time.</li>
+    <li><strong>City and country names, and place search,</strong> come from your phone's own system geocoder.</li>
+    <li><strong>Immich</strong> is your own self-hosted server, with its own software and terms.</li>
+    <li><strong>The App Store and Google Play</strong> deliver the app and handle purchases under their own terms.</li>
+  </ul>
+  <p>Details of what is sent, and when, are in the <a href="../privacy/">Privacy Policy</a>.</p>
+
+  <h2 id="changes-app">9. Updates to the app</h2>
+  <p>We may update FaunaFolio, add, change or remove features, or stop supporting an older version or device, for example to fix bugs, keep up with new phone software, or meet legal or store requirements. Because the app works on your device, a copy you have installed keeps working on its own unless the store or your phone prevents it.</p>
+
+  <h2 id="warranty">10. No warranty</h2>
+  <p>FaunaFolio is provided <strong>"as is" and "as available"</strong>. As far as the law allows, we give no promise that the app will be error-free, uninterrupted or accurate, that species suggestions or any other automatic details are correct, or that it will suit a particular purpose. We make no promise that data will never be lost.</p>
+  <p>If you are a consumer, you keep any rights the law gives you that can't be excluded, such as that digital content should be of satisfactory quality and match its description.</p>
+
+  <h2 id="liability">11. Limit of liability</h2>
+  <p>As far as the law allows, we are not liable for indirect or consequential loss, lost data, lost journal entries, lost enjoyment, or for harm that follows from relying on a suggestion, a location or a date shown in the app, or from how you behave around animals or in the places you visit.</p>
+  <p>Our total liability to you in connection with the app is limited to the amount you paid for FaunaFolio in the 12 months before the claim.</p>
+  <p>Nothing in these terms limits liability that can't legally be limited, including for death or personal injury caused by our negligence, for fraud, or for anything else the law doesn't allow us to exclude. Your statutory consumer rights are not affected.</p>
+
+  <h2 id="apple">12. Extra terms for iPhone and iPad</h2>
+  <p>If you got FaunaFolio from the Apple App Store, these also apply, and they override anything above that conflicts with them:</p>
+  <ul>
+    <li>These terms are between you and us, not Apple. We, not Apple, are responsible for the app and its content.</li>
+    <li>Apple has no duty to provide maintenance or support for the app.</li>
+    <li>If the app fails to meet a warranty that applies to it, you may tell Apple, which will refund the purchase price. Apple has no other warranty duty for the app. Other claims, losses and costs are ours to deal with, as far as the law allows.</li>
+    <li>We, not Apple, handle claims about the app, including product liability, legal or regulatory compliance, consumer-protection claims and claims that the app infringes someone's intellectual property.</li>
+    <li>You confirm that you are not in a country under a US government embargo or on a US government list of restricted parties.</li>
+    <li>Apple and its subsidiaries are third-party beneficiaries of these terms and may enforce them against you once you accept them.</li>
+    <li>The usage rules in Apple's Media Services Terms also apply to you.</li>
+  </ul>
+  <p>If you got FaunaFolio from Google Play, Google Play's terms of service apply to your purchase and download, alongside these terms.</p>
+
+  <h2 id="ip">13. Ownership</h2>
+  <p>The app, its name, logo, artwork, mascots, design and software belong to us or our licensors and are protected by law. This licence gives you the right to use them as described above and nothing more. Open-source and third-party components in the app stay under their own licences. Your photos, notes and other content remain yours.</p>
+
+  <h2 id="ending">14. Ending these terms</h2>
+  <p>You can stop at any time by deleting the app. Deleting the app also deletes the journal data stored inside it, so export a backup first if you want to keep it. Photos you saved to your system photo library stay there.</p>
+  <p>Your licence ends if you break these terms. We may also stop offering or supporting the app. Sections that by their nature should continue, including ownership, the warranty and liability sections, and governing law, continue after these terms end.</p>
+
+  <h2 id="changes-terms">15. Changes to these terms</h2>
+  <p>We may update these terms, for example when the app or the law changes. The current version is always at this address with its date at the top. For significant changes we will also mention it in the app's "What's new". If you keep using FaunaFolio after a change, you accept the updated terms. If you don't agree with them, you can stop using the app.</p>
+
+  <h2 id="law">16. Governing law</h2>
+  <p>These terms are governed by the laws of India. If you are a consumer, you still have the mandatory consumer-protection rights of the country where you live. If something goes wrong, please write to us first and we will try to put it right before anyone goes to a court.</p>
+
+  <h2 id="contact">17. Contact</h2>
+  <p>Questions about these terms: <a href="mailto:persieghinidev@gmail.com">persieghinidev@gmail.com</a>.</p>
+
+  <div class="closing">
+    <p>Short, plain and fair. Go and see some animals.</p>
+    <a class="btn" href="../">&larr; Back to the app</a>
+  </div>
+</main>
+</body>
+</html>
