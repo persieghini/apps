@@ -1304,6 +1304,10 @@ a.store--google:hover { background: #1a1a1a; transform: translateY(-1px); }
         <p>In the app's private storage on your device. Shots you take in the app are also saved to your Photos library. If you log from Immich, the original stays on your server and the app keeps a small thumbnail.</p>
       </details>
       <details>
+        <summary>Can I free up phone storage if my photos are backed up elsewhere?</summary>
+        <p>Yes, if you use Immich. Each photo you log is copied into FaunaFolio's own storage, so deleting it from your Photos library, or letting iCloud or Google Photos optimise your storage, doesn't affect your journal, and it doesn't free the app's copy either. To reclaim that space, connect your Immich server and use <b>Settings → Free up space</b>. FaunaFolio finds the photos your server already has by comparing file checksums (the check itself never uploads anything), deletes the local original and keeps a small thumbnail. The full photo then streams from your server, so you need a connection to view it at full size. Place, date and notes live in the journal itself and aren't touched. iCloud and Google Photos can't be used this way, because the app doesn't connect to them.</p>
+      </details>
+      <details>
         <summary>How do I move my journal to a new phone?</summary>
         <p>Go to Settings, then Backup &amp; restore. Export everything into one encrypted file, then restore that file on the new phone.</p>
       </details>
