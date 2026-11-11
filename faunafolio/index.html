@@ -736,8 +736,9 @@ a.store--google:hover { background: #1a1a1a; transform: translateY(-1px); }
 .footer a:hover { color: var(--text); }
 
 /* ---------- reviews ----------
-   Without JS (or with reduced motion) the cards wrap and stay centred. With JS they sit in
-   one row; if that row is wider than the screen it scrolls on its own and pauses on hover. */
+   Without JS (or with reduced motion) the cards wrap and stay centred. With JS they sit in a
+   grid: one-line reviews stack two to a column, longer ones take a whole column. If the grid
+   is wider than the screen it scrolls on its own, and people can swipe or drag it too. */
 .reviews {
   display: flex; gap: 16px; overflow: hidden;
   margin-top: clamp(26px, 4vw, 38px);
@@ -748,19 +749,23 @@ a.store--google:hover { background: #1a1a1a; transform: translateY(-1px); }
   display: flex; flex-wrap: wrap; justify-content: center; gap: 16px;
 }
 .reviews__track > li { display: flex; flex: 0 1 340px; min-width: min(260px, 100%); }
-.reviews--js .reviews__track { flex-wrap: nowrap; }
-.reviews--js .reviews__track > li { flex: 0 0 clamp(270px, 28vw, 340px); }
+.reviews--js { overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+.reviews--js::-webkit-scrollbar { display: none; }
+.reviews--js .reviews__track {
+  display: grid; grid-auto-flow: column dense;
+  grid-template-rows: repeat(2, 1fr);
+  grid-auto-columns: clamp(270px, 28vw, 340px);
+  justify-content: center; flex-wrap: nowrap;
+}
+.reviews--js .reviews__track > li { flex: none; min-width: 0; }
+.reviews--js .reviews__track > li.is-tall { grid-row: span 2; }
 .reviews.is-scrolling {
+  cursor: grab; touch-action: pan-x pan-y;
   -webkit-mask: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
   mask: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
-.reviews.is-scrolling .reviews__track {
-  justify-content: flex-start; padding-inline: 0;
-  animation: reviews-scroll var(--reviews-dur, 45s) linear infinite;
-}
-.reviews.is-scrolling:hover .reviews__track,
-.reviews.is-scrolling:focus-within .reviews__track { animation-play-state: paused; }
-@keyframes reviews-scroll { to { transform: translateX(calc(-100% - 16px)); } }
+.reviews.is-dragging { cursor: grabbing; user-select: none; }
+.reviews.is-scrolling .reviews__track { justify-content: start; padding-inline: 0; min-width: 0; }
 .review {
   display: flex; flex-direction: column; gap: 12px; margin: 0; flex: 1;
   padding: 22px 22px 20px; border-radius: 18px;
@@ -1453,30 +1458,93 @@ var LINKS = {
 
 var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/* Reviews: one row; when it is wider than the screen it scrolls on its own (CSS pauses it on hover). */
+/* Reviews: one-line reviews stack two to a column. When the grid is wider than the screen it
+   scrolls on its own, loops forever, and can also be swiped or dragged; it pauses while you do. */
 (function reviewsRow() {
   var box = document.querySelector(".reviews");
   var track = box && box.querySelector(".reviews__track");
   if (!track || reduceMotion) return;
-  var GAP = 16, SPEED = 45; // px per second
-  var clone = null;
+  var GAP = 16, SPEED = 40; // px per second
+  var clone = null, loop = 0, pos = 0, lastSet = 0, hovered = false, held = false, pausedUntil = 0, last = 0, raf = 0;
   box.classList.add("reviews--js");
+  box.tabIndex = 0;
+  box.setAttribute("role", "region");
+  box.setAttribute("aria-label", "Reviews");
+
+  function markTall() {
+    var items = track.children;
+    for (var i = 0; i < items.length; i++) {
+      var q = items[i].querySelector("blockquote");
+      var lh = parseFloat(getComputedStyle(q).lineHeight) || 24;
+      var tall = !!items[i].querySelector(".review__title") || q.offsetHeight > lh * 1.3;
+      items[i].classList.toggle("is-tall", tall);
+    }
+  }
   function layout() {
     box.classList.remove("is-scrolling");
     if (clone) { clone.remove(); clone = null; }
-    var items = track.children, width = GAP * (items.length - 1);
-    for (var i = 0; i < items.length; i++) width += items[i].offsetWidth;
-    if (width <= box.clientWidth) return;
+    box.scrollLeft = 0; pos = 0; lastSet = 0;
+    markTall();
+    if (track.scrollWidth <= box.clientWidth) return;
     clone = track.cloneNode(true);
     clone.setAttribute("aria-hidden", "true");
     box.appendChild(clone);
-    box.style.setProperty("--reviews-dur", Math.round(width / SPEED) + "s");
     box.classList.add("is-scrolling");
+    loop = clone.offsetLeft - track.offsetLeft; // one full lap, measured with the scrolling styles on
   }
+  function wrap() {
+    if (pos >= loop) pos -= loop;
+    else if (pos < 1) pos += loop;
+  }
+  function tick(t) {
+    raf = requestAnimationFrame(tick);
+    var dt = Math.min(t - last, 100) / 1000; last = t;
+    if (!clone || hovered || held || t < pausedUntil) return;
+    pos += SPEED * dt;
+    wrap();
+    box.scrollLeft = pos; lastSet = box.scrollLeft;
+  }
+  // A scroll we did not cause is the visitor's: follow it, and give them a few seconds.
+  box.addEventListener("scroll", function () {
+    if (!clone || Math.abs(box.scrollLeft - lastSet) < 2) return;
+    pos = box.scrollLeft;
+    var before = pos; wrap();
+    if (pos !== before) box.scrollLeft = pos;
+    lastSet = box.scrollLeft;
+    pausedUntil = performance.now() + 2500;
+  }, { passive: true });
+  box.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") hovered = true; });
+  box.addEventListener("pointerleave", function (e) { if (e.pointerType === "mouse") hovered = false; });
+  box.addEventListener("focusin", function () { held = true; });
+  box.addEventListener("focusout", function () { held = false; });
+  box.addEventListener("touchstart", function () { held = true; }, { passive: true });
+  box.addEventListener("touchend", function () { held = false; pausedUntil = performance.now() + 2500; }, { passive: true });
+  box.addEventListener("touchcancel", function () { held = false; }, { passive: true });
+  // Mouse users have no swipe, so let them drag the row.
+  var dragX = null, dragPos = 0, moved = false;
+  box.addEventListener("pointerdown", function (e) {
+    if (e.pointerType !== "mouse" || e.button !== 0 || !clone) return;
+    dragX = e.clientX; dragPos = box.scrollLeft; moved = false;
+  });
+  window.addEventListener("pointermove", function (e) {
+    if (dragX === null) return;
+    var dx = e.clientX - dragX;
+    if (!moved && Math.abs(dx) > 4) { moved = true; box.classList.add("is-dragging"); }
+    if (moved) box.scrollLeft = dragPos - dx;
+  });
+  function endDrag() {
+    if (dragX === null) return;
+    dragX = null; box.classList.remove("is-dragging");
+  }
+  window.addEventListener("pointerup", endDrag);
+  window.addEventListener("pointercancel", endDrag);
+
   var timer;
   window.addEventListener("resize", function () { clearTimeout(timer); timer = setTimeout(layout, 150); });
   layout();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+  raf = requestAnimationFrame(function (t) { last = t; tick(t); });
+  document.addEventListener("visibilitychange", function () { last = performance.now(); });
 })();
 
 /* Theme engine: scheme (system / light / dark / AMOLED), palette, comic style */
